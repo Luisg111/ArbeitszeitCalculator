@@ -3,28 +3,50 @@ package de.luisg.arbeitszeitcalculator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import de.luisg.arbeitszeitcalculator.ui.theme.ArbeitszeitCalculatorTheme
+import androidx.compose.runtime.*
+import de.luisg.arbeitszeitcalculator.ui.theme.GenerateAppBar
+import de.luisg.arbeitszeitcalculator.ui.theme.GenerateConfigMenu
+import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftView
 import de.luisg.arbeitszeitcalculator.viewmodel.ShiftHandler
+import java.time.LocalDateTime
+import java.time.Month
+import java.time.Year
 
 class MainActivity : ComponentActivity() {
+    private val addr =
+        "https://calendar.google.com/calendar/ical/52sbtq3idh46n9eveh1h05glf8%40group.calendar.google.com/private-8a821bd1dd1043181ee2e190ccecc8dc/basic.ics"
+    private val handler = ShiftHandler(addr)
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        ShiftHandler("https://calendar.google.com/calendar/ical/52sbtq3idh46n9eveh1h05glf8%40group.calendar.google.com/private-8a821bd1dd1043181ee2e190ccecc8dc/basic.ics").updateData()
         super.onCreate(savedInstanceState)
         setContent {
-            ArbeitszeitCalculatorTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
+            HandleUI()
+        }
+    }
 
+    @Composable
+    fun HandleUI() {
+        var config by remember {
+            mutableStateOf(true)
+        }
+        var month = remember {
+            LocalDateTime.now().month
+        }
+        var year = remember {
+            LocalDateTime.now().year
+        }
+
+        MaterialTheme {
+            Column() {
+                if (config) {
+                    GenerateAppBar("Monat/Jahr auswählen") { config = false }
+                    GenerateConfigMenu({ newYear -> year = newYear },
+                        { newMonth -> month = Month.of(newMonth) })
+                } else {
+                    GenerateAppBar("Schichtübersicht") { config = true }
+                    GenerateShiftView(handler.getShiftsByYearMonth(Year.of(year), month))
                 }
             }
         }

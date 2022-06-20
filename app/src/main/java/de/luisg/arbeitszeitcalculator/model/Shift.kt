@@ -1,10 +1,6 @@
 package de.luisg.arbeitszeitcalculator.model
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import java.time.Duration
 import java.time.LocalDateTime
-import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 
 class Shift(var startDateTime: LocalDateTime, var endDateTime: LocalDateTime) {
@@ -17,4 +13,9 @@ class Shift(var startDateTime: LocalDateTime, var endDateTime: LocalDateTime) {
     fun getShiftDuration(unit: ChronoUnit): Long {
         return unit.between(startDateTime, endDateTime)
     }
+
+    override fun toString(): String {
+        return "Shift(startDateTime=$startDateTime, endDateTime=$endDateTime)"
+    }
+
 }
