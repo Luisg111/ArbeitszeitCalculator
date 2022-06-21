@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.luisg.arbeitszeitcalculator.model.Shift
+import de.luisg.arbeitszeitcalculator.data.Shift
 import java.time.Duration
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -23,7 +23,7 @@ import java.time.format.FormatStyle
 @Composable
 fun GenerateListView(
     shifts: List<Shift>,
-    total: Duration,
+    total: () -> Duration,
     onBackButtonPressed: () -> Unit
 ) {
     Column() {
@@ -39,7 +39,7 @@ fun GenerateListView(
                     )
                 }
             })
-        GenerateShiftView(shifts, total)
+        GenerateShiftView(shifts, total())
     }
 }
 
