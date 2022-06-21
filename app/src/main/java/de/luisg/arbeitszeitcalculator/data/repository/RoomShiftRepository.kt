@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.time.Month
 
 class RoomShiftRepository(context: Context) : ShiftRepository {
     val db: ShiftDatabase
@@ -21,8 +20,9 @@ class RoomShiftRepository(context: Context) : ShiftRepository {
         ).build()
     }
 
-    override fun getShiftsForYearMonth(year: Int, month: Month): Flow<List<Shift>> {
-        return db.shiftDao.getByYearMonth(year, month)
+    override fun getShiftsForYearMonth(year: Int, month: Int): Flow<List<Shift>> {
+        //return db.shiftDao.getAll()
+        return db.shiftDao.getByYearMonth("%04d".format(year), "%02d".format(month))
     }
 
     override fun addShift(shift: Shift) {

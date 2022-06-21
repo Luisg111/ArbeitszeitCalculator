@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import de.luisg.arbeitszeitcalculator.data.Shift
 import de.luisg.arbeitszeitcalculator.data.repository.RoomShiftRepository
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateListView
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateSetDateView
@@ -29,12 +28,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         repo = RoomShiftRepository(this)
-        repo.addShift(
-            Shift(
-                LocalDateTime.now(),
-                LocalDateTime.now().plusHours(2)
-            )
-        )
         setContent {
             HandleUI()
         }
@@ -63,7 +56,8 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 composable("list") {
-                    val items by repo.getShiftsForYearMonth(year, month).collectAsState(emptyList())
+                    val items by repo.getShiftsForYearMonth(year, month.value)
+                        .collectAsState(emptyList())
                     GenerateListView(
                         shifts = items,
                         {
