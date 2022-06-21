@@ -3,17 +3,24 @@ package de.luisg.arbeitszeitcalculator
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.luisg.arbeitszeitcalculator.data.repository.RoomShiftRepository
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateListView
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateSetDateView
+import de.luisg.arbeitszeitcalculator.ui.theme.createShiftView
 import de.luisg.arbeitszeitcalculator.viewmodel.ShiftRepository
 import java.time.Duration
 import java.time.LocalDateTime
@@ -47,13 +54,23 @@ class MainActivity : ComponentActivity() {
         MaterialTheme {
             NavHost(navController = navController, startDestination = "config") {
                 composable("config") {
-                    GenerateSetDateView(
-                        { newYear -> year = newYear },
-                        { newMonth -> month = Month.of(newMonth) },
-                        { navController.navigate("list") },
-                        year,
-                        month,
-                    )
+                    Scaffold(floatingActionButton = {
+                        FloatingActionButton(
+                            onClick = { navController.navigate("create") },
+                            backgroundColor = Color.Blue,
+                            contentColor = Color.White
+                        ) {
+                            Icon(Icons.Filled.Add, "")
+                        }
+                    }) {
+                        GenerateSetDateView(
+                            { newYear -> year = newYear },
+                            { newMonth -> month = Month.of(newMonth) },
+                            { navController.navigate("list") },
+                            year,
+                            month,
+                        )
+                    }
                 }
                 composable("list") {
                     val items by repo.getShiftsForYearMonth(year, month.value)
@@ -68,6 +85,12 @@ class MainActivity : ComponentActivity() {
                             return@GenerateListView sum
                         }
                     ) { navController.navigate("config") }
+                }
+                composable("create") {
+                    createShiftView() {
+                        repo.addShift(it)
+                        navController.navigate("config")
+                    }
                 }
             }
         }
