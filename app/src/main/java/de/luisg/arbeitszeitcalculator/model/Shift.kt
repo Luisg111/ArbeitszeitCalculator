@@ -1,17 +1,16 @@
 package de.luisg.arbeitszeitcalculator.model
 
+import java.time.Duration
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 class Shift(var startDateTime: LocalDateTime, var endDateTime: LocalDateTime) {
     /**
      * gets the duration of the [Shift]
-     * @param unit the [ChronoUnit] in which the result should be returned
      *
-     * @return the duration of the [Shift] in the given [ChronoUnit]
+     * @return the duration of the [Shift]
      */
-    fun getShiftDuration(unit: ChronoUnit): Long {
-        return unit.between(startDateTime, endDateTime)
+    fun getShiftDuration(): Duration {
+        return Duration.between(startDateTime, endDateTime)
     }
 
     override fun toString(): String {

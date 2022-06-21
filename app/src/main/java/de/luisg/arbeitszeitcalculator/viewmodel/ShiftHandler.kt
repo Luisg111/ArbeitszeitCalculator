@@ -9,10 +9,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.BufferedInputStream
 import java.net.URL
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.Month
-import java.time.Year
 import java.time.ZoneId
+import java.time.temporal.ChronoUnit
 
 class ShiftHandler(private var icalAdress: String) {
     private val events = mutableStateListOf<Shift>()
@@ -22,10 +23,10 @@ class ShiftHandler(private var icalAdress: String) {
     }
 
     fun updateData() {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
             var cal: ICalendar
             BufferedInputStream(URL(icalAdress).openStream()).use {
-                cal = Biweekly.parse(it).first();
+                cal = Biweekly.parse(it).first()
             }
 
             cal.events.forEach() { event ->
@@ -45,9 +46,21 @@ class ShiftHandler(private var icalAdress: String) {
         }
     }
 
-    fun getShiftsByYearMonth(year: Year, month: Month): List<Shift> {
+    fun getShiftsByYearMonth(year: Int, month: Month): List<Shift> {
         return events.filter { shift ->
-            shift.startDateTime.year == year.value && shift.startDateTime.month == month
+            shift.startDateTime.year == year && shift.startDateTime.month == month
+        }.sortedBy { shift ->
+            shift.startDateTime
         }
+    }
+
+    fun getTotalDurationByYearMonth(year: Int, month: Month): Duration {
+        var sum: Duration = Duration.of(0, ChronoUnit.MINUTES)
+        events.filter { shift ->
+            shift.startDateTime.year == year && shift.startDateTime.month == month
+        }.forEach { shift ->
+            sum = sum.plus(shift.getShiftDuration())
+        }
+        return sum
     }
 }
