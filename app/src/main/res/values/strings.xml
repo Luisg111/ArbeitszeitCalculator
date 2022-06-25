@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">ArbeitszeitCalculator</string>
+    <string name="CreateShiftHeadline">Schicht erstellen</string>
+    <string name="CreateShiftChooseBegin">Beginn auswählen</string>
+    <string name="CreateShiftChooseEnd">Ende auswählen</string>
+    <string name="CreateShiftBeginHeadline">Schichtanfang</string>
+    <string name="CreateShiftEndHeadline">Schichtende</string>
+    <string name="CreateShiftSuccessToast">Schicht erfolgreich erstellt!</string>
+    <string name="CreateShiftFailureToast">Schichtanfang muss vor Schichtende liegen!</string>
+    <string name="CreateShiftButtonText">Schicht eintragen</string>
 </resources>

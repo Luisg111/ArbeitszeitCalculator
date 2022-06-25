@@ -14,9 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.Shift
 import de.luisg.arbeitszeitcalculator.ui.DateTimePicker.DateTimePicker
 import java.time.LocalDateTime
@@ -33,7 +35,7 @@ fun CreateShiftView(
     Column {
         TopAppBar(
             title = {
-                Text("Schicht erstellen")
+                Text(stringResource(R.string.CreateShiftHeadline))
             },
             actions = {
                 IconButton(onClick = onBackButtonPressed) {
@@ -70,7 +72,7 @@ fun CreateShiftView(
             val endDateDialogState = rememberMaterialDialogState()
 
             DateTimePicker(
-                headerText = "Beginn auswählen",
+                headerText = stringResource(R.string.CreateShiftChooseBegin),
                 startDefault = newShift.startDateTime,
                 onOkButtonClick = {
                     dateStart = it
@@ -80,19 +82,25 @@ fun CreateShiftView(
             )
 
             DateTimePicker(
-                headerText = "Ende auswählen",
+                headerText = stringResource(R.string.CreateShiftChooseEnd),
                 startDefault = dateEnd,
                 onOkButtonClick = { dateEnd = it },
                 dateDialogState = endDateDialogState
             )
-            Text(text = "Schichtanfang", fontWeight = FontWeight.ExtraBold)
+            Text(
+                text = stringResource(R.string.CreateShiftBeginHeadline),
+                fontWeight = FontWeight.ExtraBold
+            )
             Text(
                 text = dateStart.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                 modifier = Modifier
                     .clickable { startDateDialogState.show() }
                     .padding(6.dp)
             )
-            Text(text = "Schichtende", fontWeight = FontWeight.ExtraBold)
+            Text(
+                text = stringResource(R.string.CreateShiftEndHeadline),
+                fontWeight = FontWeight.ExtraBold
+            )
             Text(
                 text = dateEnd.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                 modifier = Modifier
@@ -100,6 +108,9 @@ fun CreateShiftView(
                     .padding(6.dp)
             )
 
+
+            val textSuccess = stringResource(R.string.CreateShiftSuccessToast)
+            val textError = stringResource(R.string.CreateShiftFailureToast)
             Button(
                 onClick = {
                     if (dateEnd.isAfter(dateStart)) {
@@ -108,20 +119,20 @@ fun CreateShiftView(
                         storeShift(newShift)
                         Toast.makeText(
                             context,
-                            "Schicht erfolgreich erstellt!",
+                            textSuccess,
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         Toast.makeText(
                             context,
-                            "Schichtanfang muss vor Schichtende liegen!",
+                            textError,
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 },
                 modifier = Modifier.padding(6.dp)
             ) {
-                Text("Schicht eintragen")
+                Text(stringResource(R.string.CreateShiftButtonText))
             }
         }
     }
