@@ -18,7 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.luisg.arbeitszeitcalculator.data.repository.RoomShiftRepository
-import de.luisg.arbeitszeitcalculator.ui.theme.CreateShiftView
+import de.luisg.arbeitszeitcalculator.ui.create_shift.CreateShiftView
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateSetDateView
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
 import de.luisg.arbeitszeitcalculator.viewmodel.ShiftRepository
@@ -89,6 +89,7 @@ class MainActivity : ComponentActivity() {
                 composable("create") {
                     CreateShiftView({
                         repo.addShift(it)
+                    }, {
                         navController.navigate("config")
                     })
                 }

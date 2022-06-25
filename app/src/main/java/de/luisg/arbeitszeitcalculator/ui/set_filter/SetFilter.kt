@@ -1,5 +1,6 @@
 package de.luisg.arbeitszeitcalculator.ui.theme
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,6 +53,7 @@ private fun GenerateConfigMenu(
 ) {
     var yearState by remember { mutableStateOf(currentYear.toString()) }
     var monthState by remember { mutableStateOf(currentMonth.value.toString()) }
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -89,11 +92,17 @@ private fun GenerateConfigMenu(
                 onAny = {
                     val numYear = yearState.toIntOrNull()
                     val numMonth = monthState.toIntOrNull()
-                    if (numYear != null && numMonth != null) {
+                    if (
+                        (numYear != null && numMonth != null) &&
+                        numYear > 0 && numMonth > 0 && numMonth <= 12
+                    ) {
                         setYear(numYear)
                         setMonth(numMonth)
+                        onSubmit()
+                    } else {
+                        Toast.makeText(context, "Invalide Eingabe!", Toast.LENGTH_LONG)
+                            .show()
                     }
-                    onSubmit()
                 }
             )
 
