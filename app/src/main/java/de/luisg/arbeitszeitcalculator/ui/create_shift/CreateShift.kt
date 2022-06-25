@@ -15,10 +15,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.Shift
 import de.luisg.arbeitszeitcalculator.ui.DateTimePicker.DateTimePicker
+import de.luisg.arbeitszeitcalculator.viewmodel.ShiftRepository
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -26,8 +28,8 @@ import java.time.temporal.ChronoUnit
 
 @Composable
 fun CreateShiftView(
-    storeShift: (Shift) -> Unit,
-    onBackButtonPressed: () -> Unit,
+    repo: ShiftRepository,
+    navController: NavController
 ) {
     val context = LocalContext.current
     Column {
@@ -36,7 +38,7 @@ fun CreateShiftView(
                 Text(stringResource(R.string.CreateShiftHeadline))
             },
             actions = {
-                IconButton(onClick = onBackButtonPressed) {
+                IconButton(onClick = { navController.navigate("list") }) {
                     Icon(
                         Icons.Filled.ArrowBack,
                         "go Back",
@@ -117,7 +119,7 @@ fun CreateShiftView(
                     if (dateEnd.isAfter(dateStart)) {
                         newShift.endDateTime = dateEnd
                         newShift.startDateTime = dateStart
-                        storeShift(newShift)
+                        repo.addShift(newShift)
                         Toast.makeText(
                             context,
                             textSuccess,
