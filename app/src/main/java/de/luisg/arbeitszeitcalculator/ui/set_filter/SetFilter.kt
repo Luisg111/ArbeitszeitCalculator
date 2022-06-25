@@ -15,10 +15,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import de.luisg.arbeitszeitcalculator.R
 import java.time.Month
 
 @Composable
@@ -31,7 +33,7 @@ fun GenerateSetDateView(
 ) {
     Column() {
         TopAppBar(title = {
-            Text("Monat/Jahr eingeben")
+            Text(stringResource(R.string.SetFilterHeadline))
         })
         GenerateConfigMenu(
             setYear,
@@ -66,7 +68,7 @@ private fun GenerateConfigMenu(
             onValueChange = {
                 yearState = it
             },
-            label = { Text(text = "Jahr") },
+            label = { Text(text = stringResource(R.string.SetFilterYearLabel)) },
             modifier = Modifier.padding(0.dp, 8.dp),
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.None,
@@ -80,7 +82,7 @@ private fun GenerateConfigMenu(
             onValueChange = {
                 monthState = it
             },
-            label = { Text(text = "Monat") },
+            label = { Text(text = stringResource(R.string.SetFilterMonthLabel)) },
             modifier = Modifier.padding(0.dp, 8.dp),
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.None,
@@ -100,7 +102,11 @@ private fun GenerateConfigMenu(
                         setMonth(numMonth)
                         onSubmit()
                     } else {
-                        Toast.makeText(context, "Invalide Eingabe!", Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            context,
+                            context.getText(R.string.SetFilterInvalidInput),
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                     }
                 }
@@ -116,7 +122,7 @@ private fun GenerateConfigMenu(
             }
             onSubmit()
         }) {
-            Text("Weiter")
+            Text(stringResource(R.string.SetFilterContinueButton))
         }
     }
 }

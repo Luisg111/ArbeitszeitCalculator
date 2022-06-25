@@ -14,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.Shift
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
 import java.time.Duration
@@ -30,7 +32,7 @@ fun GenerateShiftListView(
     Column() {
         TopAppBar(
             title = {
-                Text("Schichtübersicht")
+                Text(stringResource(R.string.ShiftListHeadline))
             },
             actions = {
                 IconButton(onClick = onBackButtonPressed) {
@@ -70,7 +72,7 @@ fun GenerateShiftListView(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillParentMaxWidth()
                 ) {
-                    Text("Monatssume:")
+                    Text(stringResource(R.string.ShiftListMonthTotalLabel))
                     Text(
                         "${total().toHours()} h ${
                             (total().toMinutes() % 60).toString().padStart(2, '0')

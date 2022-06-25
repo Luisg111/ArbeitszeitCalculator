@@ -8,4 +8,11 @@
     <string name="CreateShiftSuccessToast">Schicht erfolgreich erstellt!</string>
     <string name="CreateShiftFailureToast">Schichtanfang muss vor Schichtende liegen!</string>
     <string name="CreateShiftButtonText">Schicht eintragen</string>
+    <string name="ShiftListHeadline">Schichtübersicht</string>
+    <string name="ShiftListMonthTotalLabel">Monatssume:</string>
+    <string name="SetFilterHeadline">Monat/Jahr eingeben</string>
+    <string name="SetFilterYearLabel">Jahr</string>
+    <string name="SetFilterMonthLabel">Monat</string>
+    <string name="SetFilterInvalidInput">Invalide Eingabe!</string>
+    <string name="SetFilterContinueButton">Weiter</string>
 </resources>

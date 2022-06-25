@@ -2,10 +2,7 @@ package de.luisg.arbeitszeitcalculator.ui.create_shift
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -17,6 +14,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.Shift
@@ -93,21 +91,24 @@ fun CreateShiftView(
             )
             Text(
                 text = dateStart.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                fontSize = 32.sp,
                 modifier = Modifier
                     .clickable { startDateDialogState.show() }
                     .padding(6.dp)
             )
+            Spacer(modifier = Modifier.height(64.dp))
             Text(
                 text = stringResource(R.string.CreateShiftEndHeadline),
                 fontWeight = FontWeight.ExtraBold
             )
             Text(
                 text = dateEnd.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                fontSize = 32.sp,
                 modifier = Modifier
                     .clickable { endDateDialogState.show() }
                     .padding(6.dp)
             )
-
+            Spacer(modifier = Modifier.height(16.dp))
 
             val textSuccess = stringResource(R.string.CreateShiftSuccessToast)
             val textError = stringResource(R.string.CreateShiftFailureToast)
@@ -130,7 +131,9 @@ fun CreateShiftView(
                         ).show()
                     }
                 },
-                modifier = Modifier.padding(6.dp)
+                modifier = Modifier
+                    .padding(6.dp)
+                    .fillMaxWidth()
             ) {
                 Text(stringResource(R.string.CreateShiftButtonText))
             }

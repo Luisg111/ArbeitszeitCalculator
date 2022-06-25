@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         repo = RoomShiftRepository(this)
         setContent {
-            HandleUI()
+                HandleUI()
         }
     }
 
@@ -49,7 +49,9 @@ class MainActivity : ComponentActivity() {
             LocalDateTime.now().year
         }
 
-        MaterialTheme {
+        MaterialTheme(
+            colors = MaterialTheme.colors.copy(primary = Color(51, 51, 255))
+        ) {
             NavHost(navController = navController, startDestination = "config") {
                 composable("config") {
                     Scaffold(floatingActionButton = {
