@@ -21,13 +21,18 @@ class RoomShiftRepository(context: Context) : ShiftRepository {
     }
 
     override fun getShiftsForYearMonth(year: Int, month: Int): Flow<List<Shift>> {
-        //return db.shiftDao.getAll()
         return db.shiftDao.getByYearMonth("%04d".format(year), "%02d".format(month))
     }
 
     override fun addShift(shift: Shift) {
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
             db.shiftDao.addShift(shift)
+        }
+    }
+
+    override fun removeShift(shift: Shift) {
+        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
+            db.shiftDao.removeShift(shift)
         }
     }
 }

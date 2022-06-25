@@ -1,9 +1,6 @@
 package de.luisg.arbeitszeitcalculator.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import de.luisg.arbeitszeitcalculator.data.Shift
 import kotlinx.coroutines.flow.Flow
 
@@ -17,4 +14,7 @@ interface ShiftDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addShift(shift: Shift)
+
+    @Delete
+    suspend fun removeShift(shift: Shift)
 }

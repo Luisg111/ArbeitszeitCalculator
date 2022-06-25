@@ -7,52 +7,40 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.data.Shift
-import de.luisg.arbeitszeitcalculator.ui.theme.DateTimePicker.DateTimePicker
+import de.luisg.arbeitszeitcalculator.ui.DateTimePicker.DateTimePicker
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @Composable
-fun createShiftView(
-    storeShift: (Shift) -> Unit
+fun CreateShiftView(
+    storeShift: (Shift) -> Unit,
+    shift: Shift? = null
 ) {
-    var startTime = remember {
-        LocalDateTime.now()
-    }
-    var endTime = remember {
-        LocalDateTime.now().plusHours(4)
-    }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
-        var start by remember {
-            mutableStateOf<LocalDateTime>(
-                LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
-            )
-        }
-        var end by remember {
-            mutableStateOf<LocalDateTime>(
-                LocalDateTime.now().plusHours(4).truncatedTo(ChronoUnit.MINUTES)
-            )
-        }
+        val newShift = shift ?: Shift(
+            LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
+            LocalDateTime.now().plusHours(4).truncatedTo(ChronoUnit.MINUTES)
+        )
 
         val startDateDialogState = rememberMaterialDialogState()
         val endDateDialogState = rememberMaterialDialogState()
 
         DateTimePicker(
             headerText = "Beginn auswählen",
-            startDefault = start,
+            startDefault = newShift.startDateTime,
             onOkButtonClick = {
-                start = it
-                end = it
+                newShift.startDateTime = it
+                newShift.endDateTime = it
                 endDateDialogState.show()
             },
             dateDialogState = startDateDialogState
@@ -60,25 +48,25 @@ fun createShiftView(
 
         DateTimePicker(
             headerText = "Ende auswählen",
-            startDefault = end,
-            onOkButtonClick = { end = it },
+            startDefault = newShift.endDateTime,
+            onOkButtonClick = { newShift.endDateTime = it },
             dateDialogState = endDateDialogState
         )
         Text(
-            text = "$start",
+            text = "${newShift.startDateTime}",
             modifier = Modifier
                 .clickable { startDateDialogState.show() }
                 .padding(6.dp)
         )
         Text(
-            text = "$end",
+            text = "${newShift.endDateTime}",
             modifier = Modifier
                 .clickable { endDateDialogState.show() }
                 .padding(6.dp)
         )
 
         Button(
-            onClick = { storeShift(Shift(start, end)) },
+            onClick = { storeShift(newShift) },
             modifier = Modifier.padding(6.dp)
         ) {
             Text("Schicht eintragen")

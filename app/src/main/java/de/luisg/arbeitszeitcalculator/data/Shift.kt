@@ -7,8 +7,8 @@ import java.time.LocalDateTime
 
 @Entity(tableName = "shift")
 data class Shift(
-    val startDateTime: LocalDateTime,
-    val endDateTime: LocalDateTime,
+    var startDateTime: LocalDateTime,
+    var endDateTime: LocalDateTime,
     @PrimaryKey(autoGenerate = true) val id: Int? = null
 ) {
 

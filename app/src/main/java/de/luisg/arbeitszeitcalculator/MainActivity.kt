@@ -18,9 +18,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import de.luisg.arbeitszeitcalculator.data.repository.RoomShiftRepository
-import de.luisg.arbeitszeitcalculator.ui.theme.GenerateListView
+import de.luisg.arbeitszeitcalculator.ui.theme.CreateShiftView
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateSetDateView
-import de.luisg.arbeitszeitcalculator.ui.theme.createShiftView
+import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
 import de.luisg.arbeitszeitcalculator.viewmodel.ShiftRepository
 import java.time.Duration
 import java.time.LocalDateTime
@@ -73,22 +73,24 @@ class MainActivity : ComponentActivity() {
                 composable("list") {
                     val items by repo.getShiftsForYearMonth(year, month.value)
                         .collectAsState(emptyList())
-                    GenerateListView(
+                    GenerateShiftListView(
                         shifts = items,
-                        {
+                        total = {
                             var sum: Duration = Duration.of(0, ChronoUnit.MINUTES)
                             items.forEach { shift ->
                                 sum = sum.plus(shift.getShiftDuration())
                             }
-                            return@GenerateListView sum
-                        }
-                    ) { navController.navigate("config") }
+                            return@GenerateShiftListView sum
+                        },
+                        onBackButtonPressed = { navController.navigate("config") },
+                        deleteAction = { repo.removeShift(it) }
+                    )
                 }
                 composable("create") {
-                    createShiftView() {
+                    CreateShiftView({
                         repo.addShift(it)
                         navController.navigate("config")
-                    }
+                    })
                 }
             }
         }
