@@ -1,17 +1,21 @@
 package de.luisg.arbeitszeitcalculator.ui.theme
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.TextField
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.data.Shift
+import de.luisg.arbeitszeitcalculator.ui.theme.DateTimePicker.DateTimePicker
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
-import java.time.format.FormatStyle
+import java.time.temporal.ChronoUnit
 
 @Composable
 fun createShiftView(
@@ -24,46 +28,60 @@ fun createShiftView(
         LocalDateTime.now().plusHours(4)
     }
 
-    Column() {
-        dateTimePicker(startTime, onEntry = { startTime = it })
-        dateTimePicker(endTime, onEntry = {
-            endTime = it
-            storeShift(Shift(startTime, endTime))
-        })
-    }
-}
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        var start by remember {
+            mutableStateOf<LocalDateTime>(
+                LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
+            )
+        }
+        var end by remember {
+            mutableStateOf<LocalDateTime>(
+                LocalDateTime.now().plusHours(4).truncatedTo(ChronoUnit.MINUTES)
+            )
+        }
 
-@Composable
-private fun dateTimePicker(
-    default: LocalDateTime,
-    onEntry: (date: LocalDateTime) -> Unit
-) {
-    var dateText by remember {
-        mutableStateOf(
-            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-                .format(default)
-        )
-    }
-    TextField(value = dateText,
-        onValueChange = { dateText = it },
-        keyboardOptions = KeyboardOptions(
-            capitalization = KeyboardCapitalization.None,
-            autoCorrect = false,
-            imeAction = ImeAction.Go
-        ),
-        keyboardActions = KeyboardActions(
-            onAny = {
-                try {
-                    onEntry(
-                        LocalDateTime.parse(
-                            dateText,
-                            DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
-                        )
-                    )
-                } catch (e: DateTimeParseException) {
+        val startDateDialogState = rememberMaterialDialogState()
+        val endDateDialogState = rememberMaterialDialogState()
 
-                }
-            }
+        DateTimePicker(
+            headerText = "Beginn auswählen",
+            startDefault = start,
+            onOkButtonClick = {
+                start = it
+                end = it
+                endDateDialogState.show()
+            },
+            dateDialogState = startDateDialogState
         )
-    )
+
+        DateTimePicker(
+            headerText = "Ende auswählen",
+            startDefault = end,
+            onOkButtonClick = { end = it },
+            dateDialogState = endDateDialogState
+        )
+        Text(
+            text = "$start",
+            modifier = Modifier
+                .clickable { startDateDialogState.show() }
+                .padding(6.dp)
+        )
+        Text(
+            text = "$end",
+            modifier = Modifier
+                .clickable { endDateDialogState.show() }
+                .padding(6.dp)
+        )
+
+        Button(
+            onClick = { storeShift(Shift(start, end)) },
+            modifier = Modifier.padding(6.dp)
+        ) {
+            Text("Schicht eintragen")
+        }
+    }
 }

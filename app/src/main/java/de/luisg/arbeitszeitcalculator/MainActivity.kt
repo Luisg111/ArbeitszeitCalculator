@@ -28,8 +28,6 @@ import java.time.Month
 import java.time.temporal.ChronoUnit
 
 class MainActivity : ComponentActivity() {
-    private val addr =
-        "https://calendar.google.com/calendar/ical/52sbtq3idh46n9eveh1h05glf8%40group.calendar.google.com/private-8a821bd1dd1043181ee2e190ccecc8dc/basic.ics"
     private lateinit var repo: ShiftRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
