@@ -9,10 +9,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import de.luisg.arbeitszeitcalculator.data.repository.RoomShiftRepository
 import de.luisg.arbeitszeitcalculator.ui.create_shift.CreateShiftView
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
-import de.luisg.arbeitszeitcalculator.viewmodel.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl.RoomShiftRepository
 
 class MainActivity : ComponentActivity() {
     private lateinit var repo: ShiftRepository
@@ -29,7 +29,9 @@ class MainActivity : ComponentActivity() {
     fun HandleUI() {
         val navController = rememberNavController()
         MaterialTheme(
-            colors = MaterialTheme.colors.copy(primary = Color(51, 51, 255))
+            colors = MaterialTheme.colors.copy(
+                primary = Color(70, 120, 255)
+            )
         ) {
             NavHost(navController = navController, startDestination = "list") {
                 composable("list") {

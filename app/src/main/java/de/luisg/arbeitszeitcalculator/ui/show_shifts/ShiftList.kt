@@ -16,7 +16,7 @@ import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
-import de.luisg.arbeitszeitcalculator.viewmodel.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -41,8 +41,7 @@ fun GenerateShiftListView(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = { navController.navigate("create") },
-                backgroundColor = Color.Blue,
-                contentColor = Color.White
+                backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(Icons.Filled.Add, "")
             }

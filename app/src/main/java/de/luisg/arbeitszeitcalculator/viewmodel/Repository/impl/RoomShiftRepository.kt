@@ -1,10 +1,10 @@
-package de.luisg.arbeitszeitcalculator.data.repository
+package de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl
 
 import android.content.Context
 import androidx.room.Room
 import de.luisg.arbeitszeitcalculator.data.Shift
 import de.luisg.arbeitszeitcalculator.data.database.ShiftDatabase
-import de.luisg.arbeitszeitcalculator.viewmodel.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

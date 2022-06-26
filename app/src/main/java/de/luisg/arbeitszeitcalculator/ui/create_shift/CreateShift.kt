@@ -20,7 +20,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.Shift
 import de.luisg.arbeitszeitcalculator.ui.DateTimePicker.DateTimePicker
-import de.luisg.arbeitszeitcalculator.viewmodel.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -71,12 +71,17 @@ fun CreateShiftView(
             val startDateDialogState = rememberMaterialDialogState()
             val endDateDialogState = rememberMaterialDialogState()
 
+            var endDateModified = remember { false }
+
             DateTimePicker(
                 headerText = stringResource(R.string.CreateShiftChooseBegin),
-                startDefault = newShift.startDateTime,
+                startDefault = dateStart,
                 onOkButtonClick = {
                     dateStart = it
-                    endDateDialogState.show()
+                    if (!endDateModified) {
+                        dateEnd = dateStart.plusHours(4).truncatedTo(ChronoUnit.MINUTES)
+                        endDateDialogState.show()
+                    }
                 },
                 dateDialogState = startDateDialogState
             )
@@ -84,7 +89,10 @@ fun CreateShiftView(
             DateTimePicker(
                 headerText = stringResource(R.string.CreateShiftChooseEnd),
                 startDefault = dateEnd,
-                onOkButtonClick = { dateEnd = it },
+                onOkButtonClick = {
+                    endDateModified = true
+                    dateEnd = it
+                },
                 dateDialogState = endDateDialogState
             )
             Text(
@@ -120,6 +128,7 @@ fun CreateShiftView(
                         newShift.endDateTime = dateEnd
                         newShift.startDateTime = dateStart
                         repo.addShift(newShift)
+                        endDateModified = false
                         Toast.makeText(
                             context,
                             textSuccess,

@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.data.typeconverter
+package de.luisg.arbeitszeitcalculator.viewmodel.typeconverter
 
 import androidx.room.TypeConverter
 import java.time.LocalDateTime

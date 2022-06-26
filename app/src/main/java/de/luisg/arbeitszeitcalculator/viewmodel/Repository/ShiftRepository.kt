@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.viewmodel
+package de.luisg.arbeitszeitcalculator.viewmodel.Repository
 
 import de.luisg.arbeitszeitcalculator.data.Shift
 import kotlinx.coroutines.flow.Flow
