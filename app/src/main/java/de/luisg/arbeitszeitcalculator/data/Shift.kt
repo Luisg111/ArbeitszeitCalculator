@@ -21,4 +21,15 @@ data class Shift(
     fun getShiftDuration(): Duration {
         return Duration.between(startDateTime, endDateTime)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other == null || other !is Shift) {
+            return false
+        } else {
+            if (other.endDateTime == endDateTime && other.startDateTime == startDateTime) {
+                return true
+            }
+        }
+        return false
+    }
 }

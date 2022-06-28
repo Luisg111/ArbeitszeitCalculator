@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.DateTimePicker
+package de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker
 
 import androidx.compose.runtime.Composable
 import com.vanpra.composematerialdialogs.MaterialDialog

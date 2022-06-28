@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ShiftDao {
-    @Query("SELECT * FROM shift WHERE strftime('%m',startDateTime) = :month AND strftime('%Y',startDateTime) = :year")
+    @Query("SELECT * FROM shift WHERE strftime('%m',startDateTime) = :month AND strftime('%Y',startDateTime) = :year ORDER BY startDateTime DESC")
     fun getByYearMonth(year: String, month: String): Flow<List<Shift>>
 
-    @Query("SELECT * FROM shift")
-    fun getAll(): Flow<List<Shift>>
+    @Query("SELECT * FROM shift ORDER BY startDateTime DESC")
+    suspend fun getAll(): List<Shift>
 
     @Query("SELECT * FROM shift WHERE id = :id")
     fun getShift(id: Int): LiveData<Shift>

@@ -19,7 +19,7 @@ import androidx.navigation.NavController
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.Shift
-import de.luisg.arbeitszeitcalculator.ui.DateTimePicker.DateTimePicker
+import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

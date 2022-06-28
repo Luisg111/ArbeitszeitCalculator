@@ -16,4 +16,5 @@
     <string name="SetFilterInvalidInput">Invalide Eingabe!</string>
     <string name="SetFilterContinueButton">Weiter</string>
     <string name="UpdateShiftHeader">Schicht aktualisieren</string>
+    <string name="IcalImporterHeadline">Ical Importieren</string>
 </resources>

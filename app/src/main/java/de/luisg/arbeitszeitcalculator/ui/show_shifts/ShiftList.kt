@@ -6,8 +6,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -51,6 +53,15 @@ fun GenerateShiftListView(
                 title = {
                     Text(stringResource(R.string.ShiftListHeadline))
                 },
+                actions = {
+                    IconButton(onClick = { navController.navigate("import") }) {
+                        Icon(
+                            Icons.Filled.ArrowDropDown,
+                            "go Back",
+                            tint = Color.White
+                        )
+                    }
+                }
             )
 
             Spacer(Modifier.height(16.dp))
