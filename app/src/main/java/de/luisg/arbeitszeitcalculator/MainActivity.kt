@@ -19,6 +19,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Repo erstellen
         repo = RoomShiftRepository(this)
         setContent {
             HandleUI()
@@ -27,20 +28,25 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun HandleUI() {
+        //NavController erstellen für Seitennavigation
         val navController = rememberNavController()
+
         MaterialTheme(
             colors = MaterialTheme.colors.copy(
                 primary = Color(70, 120, 255)
             )
         ) {
+            //NavHost für die Navigation
             NavHost(navController = navController, startDestination = "list") {
                 composable("list") {
+                    //Listenansicht bestehender Schichten
                     GenerateShiftListView(
                         repo = repo,
                         navController = navController
                     )
                 }
                 composable("create") {
+                    //Neue Schicht eintragen
                     CreateShiftView(
                         repo = repo,
                         navController = navController

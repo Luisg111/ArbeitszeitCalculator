@@ -33,11 +33,13 @@ fun CreateShiftView(
 ) {
     val context = LocalContext.current
     Column {
+        //App bar mit Titel
         TopAppBar(
             title = {
                 Text(stringResource(R.string.CreateShiftHeadline))
             },
             actions = {
+                //Gehe Zurück zur Listenansicht, wenn zurückbutton geklickt
                 IconButton(onClick = { navController.navigate("list") }) {
                     Icon(
                         Icons.Filled.ArrowBack,
@@ -47,11 +49,15 @@ fun CreateShiftView(
                 }
             }
         )
+
+        //Zeige Start- und Enddatum mit Uhrzeiten
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
         ) {
+
+            //Erzeuge neue Schicht mit default-Daten
             val newShift = Shift(
                 LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
                 LocalDateTime.now().plusHours(4).truncatedTo(ChronoUnit.MINUTES)
@@ -68,11 +74,13 @@ fun CreateShiftView(
                 )
             }
 
+            //Erzeuge DialogStates für DateTimePicker
             val startDateDialogState = rememberMaterialDialogState()
             val endDateDialogState = rememberMaterialDialogState()
 
             var endDateModified = remember { false }
 
+            //DateTimePicker für Start der Schicht
             DateTimePicker(
                 headerText = stringResource(R.string.CreateShiftChooseBegin),
                 startDefault = dateStart,
@@ -86,6 +94,7 @@ fun CreateShiftView(
                 dateDialogState = startDateDialogState
             )
 
+            //DateTimePicker für Ende der Schicht
             DateTimePicker(
                 headerText = stringResource(R.string.CreateShiftChooseEnd),
                 startDefault = dateEnd,
@@ -95,10 +104,13 @@ fun CreateShiftView(
                 },
                 dateDialogState = endDateDialogState
             )
+
             Text(
                 text = stringResource(R.string.CreateShiftBeginHeadline),
                 fontWeight = FontWeight.ExtraBold
             )
+
+            //Zeige Schichtanfang
             Text(
                 text = dateStart.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                 fontSize = 32.sp,
@@ -106,11 +118,15 @@ fun CreateShiftView(
                     .clickable { startDateDialogState.show() }
                     .padding(6.dp)
             )
+
             Spacer(modifier = Modifier.height(64.dp))
+
             Text(
                 text = stringResource(R.string.CreateShiftEndHeadline),
                 fontWeight = FontWeight.ExtraBold
             )
+
+            //Zeige Schichtende
             Text(
                 text = dateEnd.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                 fontSize = 32.sp,
@@ -118,10 +134,13 @@ fun CreateShiftView(
                     .clickable { endDateDialogState.show() }
                     .padding(6.dp)
             )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             val textSuccess = stringResource(R.string.CreateShiftSuccessToast)
             val textError = stringResource(R.string.CreateShiftFailureToast)
+
+            //Button zum Eintragen der neuen Schicht
             Button(
                 onClick = {
                     if (dateEnd.isAfter(dateStart)) {

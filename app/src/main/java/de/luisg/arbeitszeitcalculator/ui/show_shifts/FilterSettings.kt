@@ -33,6 +33,7 @@ fun CreateFilterSettings(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.Top
     ) {
+        //Box für Jahresauswahl
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.5F)
@@ -59,6 +60,7 @@ fun CreateFilterSettings(
                 )
             }
         }
+        //Box für Monatsauswahl
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))

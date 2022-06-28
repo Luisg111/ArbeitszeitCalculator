@@ -25,13 +25,18 @@ fun CreateShiftListItem(
     foregroundColor: Color,
     deleteOperation:(Shift)->Unit
     ) {
+    //DismissState für das Löschen von Schichten
     val state = rememberDismissState()
+
+    //Lösche Schicht, wenn DismissState ist Dismissed
     if (state.isDismissed(DismissDirection.StartToEnd) || state.isDismissed(
             DismissDirection.EndToStart
         )
     ) {
         deleteOperation(item)
     }
+
+    //Passe Farbe an wenn Element geswiped wird
     val color by animateColorAsState(
         targetValue = when (state.targetValue) {
             DismissValue.DismissedToStart -> Color.Red
@@ -39,10 +44,13 @@ fun CreateShiftListItem(
             else -> backgroundColor
         }
     )
+
+    //Swipebarer Eintrag
     SwipeToDismiss(
         state = state,
         background = {},
     ) {
+        //Farbige Box im Hintergrund
         Box(
             modifier = Modifier
                 .padding(horizontal = 0.dp, vertical = 6.dp)
@@ -54,6 +62,7 @@ fun CreateShiftListItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column() {
+                    //Anfangsdatum als text
                     Text(
                         text =
                         DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
@@ -62,6 +71,8 @@ fun CreateShiftListItem(
                         fontSize = 16.sp,
                         color = foregroundColor
                     )
+
+                    //Start- und Endzeit als Text
                     Text(
                         """${
                             DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
@@ -73,6 +84,7 @@ fun CreateShiftListItem(
                         color = foregroundColor
                     )
                 }
+                //Dauer als Text
                 Text(
                     "${item.getShiftDuration().toHours()} h ${
                         (item.getShiftDuration().toMinutes() % 60).toString().padStart(2, '0')

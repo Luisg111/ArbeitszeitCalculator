@@ -34,6 +34,7 @@ fun GenerateShiftListView(
     val items by repo.getShiftsForYearMonth(year, month)
         .collectAsState(emptyList())
 
+    //Scaffold für Action Button
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
@@ -45,27 +46,37 @@ fun GenerateShiftListView(
         }
     ) {
         Column() {
+            //App Bar mit Text
             TopAppBar(
                 title = {
                     Text(stringResource(R.string.ShiftListHeadline))
                 },
             )
+
             Spacer(Modifier.height(16.dp))
+
+            //Filtereinstellungen
             CreateFilterSettings { nYear, nMonth ->
                 month = nMonth
                 year = nYear
             }
+
             Spacer(Modifier.height(16.dp))
+
+            //Liste mit Schichten und Gesamtdauer am Ende
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 0.dp)
             ) {
+                //Monatssume berechnen
                 var sum: Duration = Duration.of(0, ChronoUnit.MINUTES)
                 items.forEach { shift ->
                     sum = sum.plus(shift.getShiftDuration())
                 }
+
+                //Monatssume ausgeben
                 Text(stringResource(R.string.ShiftListMonthTotalLabel))
                 Text(
                     "${sum.toHours()} h ${
@@ -73,7 +84,10 @@ fun GenerateShiftListView(
                     } min"
                 )
             }
+
             Spacer(Modifier.height(16.dp))
+
+            //Alle Schichten anzeigen
             LazyColumn(Modifier.padding(horizontal = 16.dp, vertical = 0.dp)) {
                 items(items, { shift -> shift.id!! }) { item ->
                     CreateShiftListItem(
