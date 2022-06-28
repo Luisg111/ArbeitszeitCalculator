@@ -15,4 +15,5 @@
     <string name="SetFilterMonthLabel">Monat</string>
     <string name="SetFilterInvalidInput">Invalide Eingabe!</string>
     <string name="SetFilterContinueButton">Weiter</string>
+    <string name="UpdateShiftHeader">Schicht aktualisieren</string>
 </resources>

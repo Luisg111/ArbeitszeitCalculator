@@ -94,7 +94,8 @@ fun GenerateShiftListView(
                         item = item,
                         backgroundColor = MaterialTheme.colors.primary,
                         foregroundColor = MaterialTheme.colors.onPrimary,
-                        deleteOperation = { repo.removeShift(it) })
+                        deleteOperation = { repo.removeShift(it) },
+                        updateOperation = { navController.navigate("update/${it.id}") })
                 }
             }
         }

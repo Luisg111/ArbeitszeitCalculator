@@ -1,6 +1,7 @@
 package de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import de.luisg.arbeitszeitcalculator.data.Shift
 import de.luisg.arbeitszeitcalculator.data.database.ShiftDatabase
@@ -22,6 +23,10 @@ class RoomShiftRepository(context: Context) : ShiftRepository {
 
     override fun getShiftsForYearMonth(year: Int, month: Int): Flow<List<Shift>> {
         return db.shiftDao.getByYearMonth("%04d".format(year), "%02d".format(month))
+    }
+
+    override fun getShift(id: Int): LiveData<Shift> {
+        return db.shiftDao.getShift(id)
     }
 
     override fun addShift(shift: Shift) {

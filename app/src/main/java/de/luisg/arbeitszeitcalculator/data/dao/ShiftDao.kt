@@ -1,5 +1,6 @@
 package de.luisg.arbeitszeitcalculator.data.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import de.luisg.arbeitszeitcalculator.data.Shift
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +12,9 @@ interface ShiftDao {
 
     @Query("SELECT * FROM shift")
     fun getAll(): Flow<List<Shift>>
+
+    @Query("SELECT * FROM shift WHERE id = :id")
+    fun getShift(id: Int): LiveData<Shift>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addShift(shift: Shift)

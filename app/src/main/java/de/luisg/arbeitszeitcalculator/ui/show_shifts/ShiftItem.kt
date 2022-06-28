@@ -2,6 +2,7 @@ package de.luisg.arbeitszeitcalculator.ui.show_shifts
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -23,8 +24,9 @@ fun CreateShiftListItem(
     item: Shift,
     backgroundColor: Color,
     foregroundColor: Color,
-    deleteOperation:(Shift)->Unit
-    ) {
+    deleteOperation: (Shift) -> Unit,
+    updateOperation: (Shift) -> Unit
+) {
     //DismissState für das Löschen von Schichten
     val state = rememberDismissState()
 
@@ -56,6 +58,7 @@ fun CreateShiftListItem(
                 .padding(horizontal = 0.dp, vertical = 6.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .background(color)
+                .clickable { updateOperation(item) }
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
