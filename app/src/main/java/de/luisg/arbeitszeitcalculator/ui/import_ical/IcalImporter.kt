@@ -8,24 +8,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import biweekly.Biweekly
-import biweekly.ICalendar
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.data.Shift
-import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.Importer.Importer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.BufferedInputStream
-import java.net.URL
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 @Composable
 fun ImportIcal(
-    repository: ShiftRepository,
-    navController: NavController
+    navController: NavController,
+    importer: Importer
 ) {
     Column() {
         //App bar mit Titel
@@ -57,30 +50,9 @@ fun ImportIcal(
             //Button zum Auslösen des Updates
             Button(onClick = {
                 CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-                    var cal: ICalendar
-                    BufferedInputStream(URL(url).openStream()).use {
-                        cal = Biweekly.parse(it).first()
-                    }
-                    repository.getAllShifts().let {
-                        println("new data")
-                        for (event in cal.events) {
-                            val shift = Shift(
-                                LocalDateTime.ofInstant(
-                                    event.dateStart.value.toInstant(),
-                                    ZoneId.of("Europe/Berlin")
-                                ),
-                                LocalDateTime.ofInstant(
-                                    event.dateEnd.value.toInstant(),
-                                    ZoneId.of("Europe/Berlin")
-                                )
-                            )
-                            if (!it.contains(shift)) {
-                                repository.addShift(shift)
-                            }
-                        }
-                        withContext(Dispatchers.Main) {
-                            navController.navigate("list")
-                        }
+                    importer.import(url)
+                    withContext(Dispatchers.Main) {
+                        navController.navigate("list")
                     }
                 }
             }) {

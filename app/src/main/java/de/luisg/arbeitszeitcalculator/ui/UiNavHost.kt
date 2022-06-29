@@ -14,12 +14,14 @@ import de.luisg.arbeitszeitcalculator.ui.create_shift.CreateShiftView
 import de.luisg.arbeitszeitcalculator.ui.import_ical.ImportIcal
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
 import de.luisg.arbeitszeitcalculator.ui.update_shift.UpdateShift
+import de.luisg.arbeitszeitcalculator.viewmodel.Importer.Importer
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 
 @Composable
 fun UiNavHost(
     navController: NavHostController,
-    repo: ShiftRepository
+    repo: ShiftRepository,
+    importer: Importer
 ) {
     MaterialTheme(
         colors = MaterialTheme.colors.copy(
@@ -64,7 +66,10 @@ fun UiNavHost(
             }
             composable("import") {
                 //Schichten Importieren
-                ImportIcal(repository = repo, navController = navController)
+                ImportIcal(
+                    navController = navController,
+                    importer = importer
+                )
             }
         }
     }
