@@ -11,7 +11,7 @@ interface ShiftDao {
     fun getByYearMonth(year: String, month: String): Flow<List<Shift>>
 
     @Query("SELECT * FROM shift ORDER BY startDateTime DESC")
-    suspend fun getAll(): List<Shift>
+    fun getAll(): Flow<List<Shift>>
 
     @Query("SELECT * FROM shift WHERE id = :id")
     fun getShift(id: Int): LiveData<Shift>

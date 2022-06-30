@@ -5,6 +5,7 @@ import biweekly.ICalendar
 import de.luisg.arbeitszeitcalculator.data.Shift
 import de.luisg.arbeitszeitcalculator.viewmodel.Importer.Importer
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
+import kotlinx.coroutines.flow.last
 import java.io.BufferedInputStream
 import java.net.URL
 import java.time.LocalDateTime
@@ -18,7 +19,7 @@ class IcalImporter(
         BufferedInputStream(URL(path).openStream()).use {
             cal = Biweekly.parse(it).first()
         }
-        repository.getAllShifts().let {
+        repository.getAllShifts().last().let {
             println("new data")
             for (event in cal.events) {
                 val shift = Shift(
