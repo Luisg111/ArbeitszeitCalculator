@@ -10,10 +10,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.viewmodel.Importer.Importer
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 fun ImportIcal(
@@ -49,12 +45,8 @@ fun ImportIcal(
 
             //Button zum Auslösen des Updates
             Button(onClick = {
-                CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-                    importer.import(url)
-                    withContext(Dispatchers.Main) {
-                        navController.navigate("list")
-                    }
-                }
+                importer.import(url)
+                navController.navigate("list")
             }) {
                 Text("Ical Herunterladen & Importieren")
             }
