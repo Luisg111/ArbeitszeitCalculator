@@ -9,12 +9,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.viewmodel.Importer.Importer
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ImportIcal(
     navController: NavController,
-    importer: Importer
+    shiftUseCases: ShiftUseCases
 ) {
     Column() {
         //App bar mit Titel
@@ -45,7 +47,9 @@ fun ImportIcal(
 
             //Button zum Auslösen des Updates
             Button(onClick = {
-                importer.import(url)
+                MainScope().launch {
+                    shiftUseCases.importShiftFromIcal(url)
+                }
                 navController.navigate("list")
             }) {
                 Text("Ical Herunterladen & Importieren")

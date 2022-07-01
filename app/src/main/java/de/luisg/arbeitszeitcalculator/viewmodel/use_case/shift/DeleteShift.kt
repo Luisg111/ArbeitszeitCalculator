@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.viewmodel.use_case
+package de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift
 
 import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository

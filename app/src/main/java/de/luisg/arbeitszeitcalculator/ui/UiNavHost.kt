@@ -14,14 +14,14 @@ import de.luisg.arbeitszeitcalculator.ui.create_shift.CreateShiftView
 import de.luisg.arbeitszeitcalculator.ui.import_ical.ImportIcal
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
 import de.luisg.arbeitszeitcalculator.ui.update_shift.UpdateShift
-import de.luisg.arbeitszeitcalculator.viewmodel.Importer.Importer
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
 
 @Composable
 fun UiNavHost(
     navController: NavHostController,
     repo: ShiftRepository,
-    importer: Importer
+    shiftUseCases: ShiftUseCases,
 ) {
     MaterialTheme(
         colors = MaterialTheme.colors.copy(
@@ -33,14 +33,14 @@ fun UiNavHost(
             composable("list") {
                 //Listenansicht bestehender Schichten
                 GenerateShiftListView(
-                    repo = repo,
-                    navController = navController
+                    navController = navController,
+                    shiftUseCases = shiftUseCases
                 )
             }
             composable("create") {
                 //Neue Schicht eintragen
                 CreateShiftView(
-                    repo = repo,
+                    shiftUseCases = shiftUseCases,
                     navController = navController
                 )
             }
@@ -52,7 +52,7 @@ fun UiNavHost(
                 if (it.arguments != null) {
                     UpdateShift(
                         id = it.arguments!!.getInt("shiftId"),
-                        repository = repo,
+                        shiftUseCases = shiftUseCases,
                         navController = navController
                     )
                 } else {
@@ -68,7 +68,7 @@ fun UiNavHost(
                 //Schichten Importieren
                 ImportIcal(
                     navController = navController,
-                    importer = importer
+                    shiftUseCases = shiftUseCases
                 )
             }
         }

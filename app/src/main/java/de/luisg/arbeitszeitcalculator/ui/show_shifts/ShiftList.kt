@@ -16,15 +16,14 @@ import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
-import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
-import java.time.Duration
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.viewmodel.util.ShiftOrder
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 @Composable
 fun GenerateShiftListView(
-    repo: ShiftRepository,
-    navController: NavController
+    navController: NavController,
+    shiftUseCases: ShiftUseCases
 ) {
     var month by remember {
         //mutableStateOf(LocalDateTime.now().month.value)
@@ -34,8 +33,11 @@ fun GenerateShiftListView(
         mutableStateOf(LocalDateTime.now().year)
     }
 
-    val items by repo.getShiftsForYearMonth(year, month)
-        .collectAsState(emptyList())
+    val items by shiftUseCases.getShiftLive(
+        order = ShiftOrder.descending,
+        year = year,
+        month = month
+    ).collectAsState(initial = emptyList())
 
     //Scaffold für Action Button
     Scaffold(
@@ -85,18 +87,10 @@ fun GenerateShiftListView(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 0.dp)
             ) {
-                //Monatssume berechnen
-                var sum: Duration = Duration.of(0, ChronoUnit.MINUTES)
-                items.forEach { shift ->
-                    sum = sum.plus(shift.getShiftDuration())
-                }
-
                 //Monatssume ausgeben
                 Text(stringResource(R.string.ShiftListMonthTotalLabel))
                 Text(
-                    "${sum.toHours()} h ${
-                        (sum.toMinutes() % 60).toString().padStart(2, '0')
-                    } min"
+                    shiftUseCases.displayShiftDuration(items)
                 )
             }
 
@@ -109,8 +103,8 @@ fun GenerateShiftListView(
                         item = item,
                         backgroundColor = MaterialTheme.colors.primary,
                         foregroundColor = MaterialTheme.colors.onPrimary,
-                        deleteOperation = { repo.removeShift(it) },
-                        updateOperation = { navController.navigate("update/${it.id}") })
+                        shiftUseCases = shiftUseCases
+                    )
                 }
             }
         }

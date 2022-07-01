@@ -20,7 +20,9 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
-import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -28,8 +30,8 @@ import java.time.temporal.ChronoUnit
 
 @Composable
 fun CreateShiftView(
-    repo: ShiftRepository,
     navController: NavController,
+    shiftUseCases: ShiftUseCases
 ) {
     val context = LocalContext.current
     Column {
@@ -143,22 +145,21 @@ fun CreateShiftView(
             //Button zum Eintragen der neuen Schicht
             Button(
                 onClick = {
-                    if (dateEnd.isAfter(dateStart)) {
-                        newShift.endDateTime = dateEnd
-                        newShift.startDateTime = dateStart
-                        repo.addShift(newShift)
-                        endDateModified = false
-                        Toast.makeText(
-                            context,
-                            textSuccess,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            textError,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                    MainScope().launch {
+                        try {
+                            shiftUseCases.storeShift(newShift)
+                            Toast.makeText(
+                                context,
+                                textSuccess,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } catch (e: IllegalArgumentException) {
+                            Toast.makeText(
+                                context,
+                                textError,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 },
                 modifier = Modifier

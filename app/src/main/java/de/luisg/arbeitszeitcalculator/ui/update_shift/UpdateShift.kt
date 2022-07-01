@@ -7,7 +7,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,14 +19,16 @@ import androidx.navigation.NavHostController
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
-import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @Composable
 fun UpdateShift(
     id: Int,
-    repository: ShiftRepository,
+    shiftUseCases: ShiftUseCases,
     navController: NavHostController
 ) {
     val context = LocalContext.current
@@ -57,7 +58,9 @@ fun UpdateShift(
         ) {
 
             //Erzeuge neue Schicht mit default-Daten
-            val newShift by repository.getShift(id).observeAsState()
+            val newShift by shiftUseCases.getShiftLive(id).collectAsState(
+                initial = null
+            )
 
             newShift?.let() {
                 var dateStart by remember {
@@ -133,22 +136,21 @@ fun UpdateShift(
                 //Button zum Eintragen der neuen Schicht
                 Button(
                     onClick = {
-                        if (dateEnd.isAfter(dateStart)) {
-                            newShift!!.endDateTime = dateEnd
-                            newShift!!.startDateTime = dateStart
-                            repository.addShift(newShift!!)
-                            Toast.makeText(
-                                context,
-                                textSuccess,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            navController.navigate("list")
-                        } else {
-                            Toast.makeText(
-                                context,
-                                textError,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                        MainScope().launch {
+                            try {
+                                shiftUseCases.storeShift(newShift!!)
+                                Toast.makeText(
+                                    context,
+                                    textSuccess,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            } catch (e: IllegalArgumentException) {
+                                Toast.makeText(
+                                    context,
+                                    textError,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     },
                     modifier = Modifier

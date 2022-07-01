@@ -1,7 +1,6 @@
 package de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.room.Room
 import de.luisg.arbeitszeitcalculator.data.data_source.ShiftDatabase
@@ -19,15 +18,27 @@ class RoomShiftRepository(context: Context) : ShiftRepository, ViewModel() {
         ).build()
     }
 
-    override fun getShiftsForYearMonth(year: Int, month: Int): Flow<List<Shift>> {
+    override fun getShiftsForYearMonthAsFlow(year: Int, month: Int): Flow<List<Shift>> {
+        return db.shiftDao.getByYearMonthAsFlow("%04d".format(year), "%02d".format(month))
+    }
+
+    override suspend fun getShiftsForYearMonth(year: Int, month: Int): List<Shift> {
         return db.shiftDao.getByYearMonth("%04d".format(year), "%02d".format(month))
     }
 
-    override fun getAllShifts(): Flow<List<Shift>> {
+    override fun getAllShiftsAsFlow(): Flow<List<Shift>> {
+        return db.shiftDao.getAllAsFlow()
+    }
+
+    override suspend fun getAllShifts(): List<Shift> {
         return db.shiftDao.getAll()
     }
 
-    override fun getShift(id: Int): LiveData<Shift> {
+    override fun getShiftAsFlow(id: Int): Flow<Shift> {
+        return db.shiftDao.getShiftAsFlow(id)
+    }
+
+    override suspend fun getShift(id: Int): Shift {
         return db.shiftDao.getShift(id)
     }
 

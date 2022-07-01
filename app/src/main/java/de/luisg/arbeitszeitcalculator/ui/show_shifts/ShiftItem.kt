@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,6 +16,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.luisg.arbeitszeitcalculator.data.model.Shift
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -24,8 +28,7 @@ fun CreateShiftListItem(
     item: Shift,
     backgroundColor: Color,
     foregroundColor: Color,
-    deleteOperation: (Shift) -> Unit,
-    updateOperation: (Shift) -> Unit
+    shiftUseCases: ShiftUseCases,
 ) {
     //DismissState für das Löschen von Schichten
     val state = rememberDismissState()
@@ -35,7 +38,9 @@ fun CreateShiftListItem(
             DismissDirection.EndToStart
         )
     ) {
-        deleteOperation(item)
+        LaunchedEffect(key1 = item) {
+            shiftUseCases.deleteShift(item)
+        }
     }
 
     //Passe Farbe an wenn Element geswiped wird
@@ -58,7 +63,11 @@ fun CreateShiftListItem(
                 .padding(horizontal = 0.dp, vertical = 6.dp)
                 .clip(RoundedCornerShape(4.dp))
                 .background(color)
-                .clickable { updateOperation(item) }
+                .clickable {
+                    MainScope().launch {
+                        shiftUseCases.storeShift(item)
+                    }
+                }
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
