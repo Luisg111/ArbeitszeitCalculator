@@ -3,7 +3,7 @@ package de.luisg.arbeitszeitcalculator
 //import androidx.compose.runtime.mutableStateListOf
 //import biweekly.Biweekly
 //import biweekly.ICalendar
-//import de.luisg.arbeitszeitcalculator.data.Shift
+//import de.luisg.arbeitszeitcalculator.data.model.Shift
 //import kotlinx.coroutines.CoroutineScope
 //import kotlinx.coroutines.Dispatchers
 //import kotlinx.coroutines.launch

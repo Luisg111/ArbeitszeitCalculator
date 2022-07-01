@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.data.Shift
+import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import java.time.LocalDateTime
@@ -29,7 +29,7 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun CreateShiftView(
     repo: ShiftRepository,
-    navController: NavController
+    navController: NavController,
 ) {
     val context = LocalContext.current
     Column {

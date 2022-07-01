@@ -1,11 +1,10 @@
-package de.luisg.arbeitszeitcalculator.data.database
+package de.luisg.arbeitszeitcalculator.data.data_source
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import de.luisg.arbeitszeitcalculator.data.Shift
-import de.luisg.arbeitszeitcalculator.data.dao.ShiftDao
-import de.luisg.arbeitszeitcalculator.viewmodel.typeconverter.LocalDateTimeConverter
+import de.luisg.arbeitszeitcalculator.data.model.Shift
+import de.luisg.arbeitszeitcalculator.viewmodel.util.LocalDateTimeConverter
 
 @Database(
     entities = [Shift::class],

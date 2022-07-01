@@ -2,7 +2,7 @@ package de.luisg.arbeitszeitcalculator.viewmodel.Importer.impl
 
 import biweekly.Biweekly
 import biweekly.ICalendar
-import de.luisg.arbeitszeitcalculator.data.Shift
+import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.viewmodel.Importer.Importer
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import kotlinx.coroutines.CoroutineScope

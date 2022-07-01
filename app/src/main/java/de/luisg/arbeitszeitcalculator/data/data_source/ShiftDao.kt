@@ -1,8 +1,8 @@
-package de.luisg.arbeitszeitcalculator.data.dao
+package de.luisg.arbeitszeitcalculator.data.data_source
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import de.luisg.arbeitszeitcalculator.data.Shift
+import de.luisg.arbeitszeitcalculator.data.model.Shift
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -11,7 +11,7 @@ interface ShiftDao {
     fun getByYearMonth(year: String, month: String): Flow<List<Shift>>
 
     @Query("SELECT * FROM shift ORDER BY startDateTime DESC")
-    suspend fun getAll(): List<Shift>
+    fun getAll(): Flow<List<Shift>>
 
     @Query("SELECT * FROM shift WHERE id = :id")
     fun getShift(id: Int): LiveData<Shift>

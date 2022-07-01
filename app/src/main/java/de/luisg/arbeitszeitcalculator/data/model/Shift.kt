@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.data
+package de.luisg.arbeitszeitcalculator.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

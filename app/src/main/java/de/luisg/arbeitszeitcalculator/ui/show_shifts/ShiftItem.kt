@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import de.luisg.arbeitszeitcalculator.data.Shift
+import de.luisg.arbeitszeitcalculator.data.model.Shift
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 

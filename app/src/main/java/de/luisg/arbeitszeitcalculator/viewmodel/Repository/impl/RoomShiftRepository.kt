@@ -2,16 +2,14 @@ package de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.room.Room
-import de.luisg.arbeitszeitcalculator.data.Shift
-import de.luisg.arbeitszeitcalculator.data.database.ShiftDatabase
+import de.luisg.arbeitszeitcalculator.data.data_source.ShiftDatabase
+import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
-class RoomShiftRepository(context: Context) : ShiftRepository {
+class RoomShiftRepository(context: Context) : ShiftRepository, ViewModel() {
     val db: ShiftDatabase
 
     init {
@@ -25,7 +23,7 @@ class RoomShiftRepository(context: Context) : ShiftRepository {
         return db.shiftDao.getByYearMonth("%04d".format(year), "%02d".format(month))
     }
 
-    override suspend fun getAllShifts(): List<Shift> {
+    override fun getAllShifts(): Flow<List<Shift>> {
         return db.shiftDao.getAll()
     }
 
@@ -33,15 +31,11 @@ class RoomShiftRepository(context: Context) : ShiftRepository {
         return db.shiftDao.getShift(id)
     }
 
-    override fun addShift(shift: Shift) {
-        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-            db.shiftDao.addShift(shift)
-        }
+    override suspend fun addShift(shift: Shift) {
+        db.shiftDao.addShift(shift)
     }
 
-    override fun removeShift(shift: Shift) {
-        CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-            db.shiftDao.removeShift(shift)
-        }
+    override suspend fun removeShift(shift: Shift) {
+        db.shiftDao.removeShift(shift)
     }
 }
