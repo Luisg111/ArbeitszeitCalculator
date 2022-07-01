@@ -96,9 +96,7 @@ fun CreateShiftListItem(
                 }
                 //Dauer als Text
                 Text(
-                    "${item.getShiftDuration().toHours()} h ${
-                        (item.getShiftDuration().toMinutes() % 60).toString().padStart(2, '0')
-                    } min",
+                    shiftUseCases.displayShiftDuration(item),
                     color = foregroundColor
                 )
             }

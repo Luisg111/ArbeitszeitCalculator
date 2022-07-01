@@ -2,6 +2,7 @@ package de.luisg.arbeitszeitcalculator.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.Duration
 import java.time.LocalDateTime
 
@@ -9,18 +10,13 @@ import java.time.LocalDateTime
 data class Shift(
     var startDateTime: LocalDateTime,
     var endDateTime: LocalDateTime,
-    @PrimaryKey(autoGenerate = true) val id: Int? = null
+    @PrimaryKey(autoGenerate = true) @JsonIgnore val id: Int? = null
 ) {
-
-
-    /**
-     * gets the duration of the [Shift]
-     *
-     * @return the duration of the [Shift]
-     */
-    fun getShiftDuration(): Duration {
-        return Duration.between(startDateTime, endDateTime)
-    }
+    @get:JsonIgnore
+    val duration: Duration
+        get() {
+            return Duration.between(startDateTime, endDateTime)
+        }
 
     override fun equals(other: Any?): Boolean {
         if (other == null || other !is Shift) {
