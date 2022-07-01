@@ -25,7 +25,7 @@ class RoomShiftRepository(context: Context) : ShiftRepository {
         return db.shiftDao.getByYearMonth("%04d".format(year), "%02d".format(month))
     }
 
-    override fun getAllShifts(): Flow<List<Shift>> {
+    override suspend fun getAllShifts(): List<Shift> {
         return db.shiftDao.getAll()
     }
 

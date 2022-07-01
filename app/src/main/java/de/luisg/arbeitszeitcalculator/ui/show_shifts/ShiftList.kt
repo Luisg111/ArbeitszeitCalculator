@@ -27,7 +27,8 @@ fun GenerateShiftListView(
     navController: NavController
 ) {
     var month by remember {
-        mutableStateOf(LocalDateTime.now().month.value)
+        //mutableStateOf(LocalDateTime.now().month.value)
+        mutableStateOf(6)
     }
     var year by remember {
         mutableStateOf(LocalDateTime.now().year)
@@ -67,10 +68,13 @@ fun GenerateShiftListView(
             Spacer(Modifier.height(16.dp))
 
             //Filtereinstellungen
-            CreateFilterSettings { nYear, nMonth ->
-                month = nMonth
-                year = nYear
-            }
+            CreateFilterSettings(
+                startYear = year,
+                startMonth = month,
+                onDateUpdate = { nYear, nMonth ->
+                    month = nMonth
+                    year = nYear
+                })
 
             Spacer(Modifier.height(16.dp))
 

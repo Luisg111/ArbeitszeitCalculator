@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ShiftRepository {
     fun getShiftsForYearMonth(year: Int, month: Int): Flow<List<Shift>>
-    fun getAllShifts(): Flow<List<Shift>>
+    suspend fun getAllShifts(): List<Shift>
     fun getShift(id: Int): LiveData<Shift>
     fun addShift(shift: Shift)
     fun removeShift(shift: Shift)

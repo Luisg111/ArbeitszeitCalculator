@@ -7,7 +7,6 @@ import de.luisg.arbeitszeitcalculator.viewmodel.Importer.Importer
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import java.io.BufferedInputStream
 import java.net.URL
@@ -18,12 +17,12 @@ class IcalImporter(
     val repository: ShiftRepository,
 ) : Importer {
     override fun import(path: String) {
-        var cal: ICalendar
-        BufferedInputStream(URL(path).openStream()).use {
-            cal = Biweekly.parse(it).first()
-        }
         CoroutineScope(Dispatchers.IO).launch(Dispatchers.IO) {
-            repository.getAllShifts().last().let {
+            var cal: ICalendar
+            BufferedInputStream(URL(path).openStream()).use {
+                cal = Biweekly.parse(it).first()
+            }
+            repository.getAllShifts().let {
                 println("new data")
                 for (event in cal.events) {
                     val shift = Shift(

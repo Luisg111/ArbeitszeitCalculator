@@ -19,15 +19,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.time.LocalDateTime
 
 @Composable
 fun CreateFilterSettings(
-    onDateUpdate: (year: Int, month: Int) -> Unit
+    onDateUpdate: (year: Int, month: Int) -> Unit,
+    startYear: Int,
+    startMonth: Int
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var month by remember { mutableStateOf(LocalDateTime.now().month.value) }
-    var year by remember { mutableStateOf(LocalDateTime.now().year) }
+    var month by remember { mutableStateOf(startMonth) }
+    var year by remember { mutableStateOf(startYear) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
