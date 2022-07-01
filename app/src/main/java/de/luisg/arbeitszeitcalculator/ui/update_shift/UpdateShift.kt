@@ -19,7 +19,7 @@ import androidx.navigation.NavHostController
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
@@ -138,12 +138,15 @@ fun UpdateShift(
                     onClick = {
                         MainScope().launch {
                             try {
+                                newShift!!.startDateTime = dateStart
+                                newShift!!.endDateTime = dateEnd
                                 shiftUseCases.storeShift(newShift!!)
                                 Toast.makeText(
                                     context,
                                     textSuccess,
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                navController.navigate("list")
                             } catch (e: IllegalArgumentException) {
                                 Toast.makeText(
                                     context,
@@ -157,7 +160,7 @@ fun UpdateShift(
                         .padding(6.dp)
                         .fillMaxWidth()
                 ) {
-                    Text(stringResource(R.string.CreateShiftButtonText))
+                    Text(stringResource(R.string.UpdateShiftButtonText))
                 }
             }
         }

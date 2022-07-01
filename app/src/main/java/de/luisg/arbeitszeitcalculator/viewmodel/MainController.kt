@@ -9,7 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import de.luisg.arbeitszeitcalculator.ui.UiNavHost
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl.RoomShiftRepository
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.*
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 
 class MainController : ComponentActivity() {
     private lateinit var repo: ShiftRepository
@@ -20,14 +20,7 @@ class MainController : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //Repo erstellen
         repo = RoomShiftRepository(this)
-        shiftUseCases = ShiftUseCases(
-            deleteShift = DeleteShift(repo),
-            storeShift = StoreShift(repo),
-            displayShiftDuration = DisplayShiftDuration(),
-            getShift = GetShift(repo),
-            getShiftLive = GetShiftLive(repo),
-            importShiftFromIcal = ImportShiftFromIcal(repo)
-        )
+        shiftUseCases = ShiftUseCases(repository = repo)
         setContent {
             CreateUI()
         }
@@ -38,7 +31,6 @@ class MainController : ComponentActivity() {
         navHostController = rememberNavController()
         UiNavHost(
             navController = navHostController,
-            repo = repo,
             shiftUseCases = shiftUseCases
         )
     }

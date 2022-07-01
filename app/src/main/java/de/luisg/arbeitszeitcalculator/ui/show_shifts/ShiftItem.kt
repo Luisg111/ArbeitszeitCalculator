@@ -15,10 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.data.model.Shift
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -29,6 +28,7 @@ fun CreateShiftListItem(
     backgroundColor: Color,
     foregroundColor: Color,
     shiftUseCases: ShiftUseCases,
+    navController: NavController
 ) {
     //DismissState für das Löschen von Schichten
     val state = rememberDismissState()
@@ -64,9 +64,7 @@ fun CreateShiftListItem(
                 .clip(RoundedCornerShape(4.dp))
                 .background(color)
                 .clickable {
-                    MainScope().launch {
-                        shiftUseCases.storeShift(item)
-                    }
+                    navController.navigate("update/${item.id}")
                 }
         ) {
             Row(

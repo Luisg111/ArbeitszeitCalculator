@@ -9,7 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
@@ -47,7 +48,7 @@ fun ImportIcal(
 
             //Button zum Auslösen des Updates
             Button(onClick = {
-                MainScope().launch {
+                MainScope().launch(Dispatchers.IO) {
                     shiftUseCases.importShiftFromIcal(url)
                 }
                 navController.navigate("list")

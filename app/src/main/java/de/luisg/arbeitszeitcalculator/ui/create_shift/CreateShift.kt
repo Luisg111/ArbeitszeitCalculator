@@ -20,7 +20,7 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -147,6 +147,8 @@ fun CreateShiftView(
                 onClick = {
                     MainScope().launch {
                         try {
+                            newShift.startDateTime = dateStart
+                            newShift.endDateTime = dateEnd
                             shiftUseCases.storeShift(newShift)
                             Toast.makeText(
                                 context,

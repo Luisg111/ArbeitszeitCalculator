@@ -14,13 +14,11 @@ import de.luisg.arbeitszeitcalculator.ui.create_shift.CreateShiftView
 import de.luisg.arbeitszeitcalculator.ui.import_ical.ImportIcal
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
 import de.luisg.arbeitszeitcalculator.ui.update_shift.UpdateShift
-import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 
 @Composable
 fun UiNavHost(
     navController: NavHostController,
-    repo: ShiftRepository,
     shiftUseCases: ShiftUseCases,
 ) {
     MaterialTheme(

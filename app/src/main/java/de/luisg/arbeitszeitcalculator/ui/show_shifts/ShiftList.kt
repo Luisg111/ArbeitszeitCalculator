@@ -16,7 +16,7 @@ import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.util.ShiftOrder
 import java.time.LocalDateTime
 
@@ -26,8 +26,7 @@ fun GenerateShiftListView(
     shiftUseCases: ShiftUseCases
 ) {
     var month by remember {
-        //mutableStateOf(LocalDateTime.now().month.value)
-        mutableStateOf(6)
+        mutableStateOf(LocalDateTime.now().month.value)
     }
     var year by remember {
         mutableStateOf(LocalDateTime.now().year)
@@ -103,7 +102,8 @@ fun GenerateShiftListView(
                         item = item,
                         backgroundColor = MaterialTheme.colors.primary,
                         foregroundColor = MaterialTheme.colors.onPrimary,
-                        shiftUseCases = shiftUseCases
+                        shiftUseCases = shiftUseCases,
+                        navController = navController
                     )
                 }
             }
