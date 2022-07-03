@@ -49,4 +49,8 @@ class RoomShiftRepository(context: Context) : ShiftRepository, ViewModel() {
     override suspend fun removeShift(shift: Shift) {
         db.shiftDao.removeShift(shift)
     }
+
+    override suspend fun removeAllShift() {
+        db.shiftDao.removeAllShift()
+    }
 }

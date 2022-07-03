@@ -62,7 +62,7 @@ fun UiNavHost(
                     navController.navigate("list")
                 }
             }
-            composable("import") {
+            composable("import_ical") {
                 //Schichten Importieren
                 ImportIcal(
                     navController = navController,

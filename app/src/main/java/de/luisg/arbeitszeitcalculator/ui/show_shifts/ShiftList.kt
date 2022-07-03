@@ -6,24 +6,27 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
+import de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl.RoomShiftRepository
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.util.ShiftOrder
 import java.time.LocalDateTime
 
 @Composable
+@Preview
 fun GenerateShiftListView(
-    navController: NavController,
-    shiftUseCases: ShiftUseCases
+    navController: NavController = NavController(LocalContext.current),
+    shiftUseCases: ShiftUseCases = ShiftUseCases(RoomShiftRepository(LocalContext.current))
 ) {
     var month by remember {
         mutableStateOf(LocalDateTime.now().month.value)
@@ -31,6 +34,8 @@ fun GenerateShiftListView(
     var year by remember {
         mutableStateOf(LocalDateTime.now().year)
     }
+
+    var ioMenuExtended by remember { mutableStateOf(false) }
 
     val items by shiftUseCases.getShiftLive(
         order = ShiftOrder.descending,
@@ -56,15 +61,29 @@ fun GenerateShiftListView(
                     Text(stringResource(R.string.ShiftListHeadline))
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate("import") }) {
-                        Icon(
-                            Icons.Filled.ArrowDropDown,
-                            "go Back",
-                            tint = Color.White
-                        )
+                    IconButton(onClick = { ioMenuExtended = !ioMenuExtended }) {
+                        Icon(Icons.Filled.MoreVert, "more...")
+                    }
+                    DropdownMenu(
+                        expanded = ioMenuExtended,
+                        onDismissRequest = { ioMenuExtended = false }
+                    ) {
+                        DropdownMenuItem(onClick = { navController.navigate("import_ical") }) {
+                            Text("Import Ical")
+                        }
+                        DropdownMenuItem(onClick = { navController.navigate("import_json") }) {
+                            Text("Import JSON")
+                        }
+                        DropdownMenuItem(onClick = { navController.navigate("export_json") }) {
+                            Text("Export JSON")
+                        }
+                        DropdownMenuItem(onClick = { shiftUseCases.deleteShift }) {
+                            Text("Alle Schichten löschen")
+                        }
                     }
                 }
             )
+
 
             Spacer(Modifier.height(16.dp))
 

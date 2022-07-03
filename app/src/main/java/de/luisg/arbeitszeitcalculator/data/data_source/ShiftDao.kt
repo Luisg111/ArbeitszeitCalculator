@@ -29,4 +29,7 @@ interface ShiftDao {
 
     @Delete
     suspend fun removeShift(shift: Shift)
+
+    @Query("DELETE FROM shift")
+    suspend fun removeAllShift()
 }

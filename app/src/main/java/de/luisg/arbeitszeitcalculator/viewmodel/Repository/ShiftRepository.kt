@@ -16,4 +16,6 @@ interface ShiftRepository {
     suspend fun addShift(shift: Shift)
 
     suspend fun removeShift(shift: Shift)
+
+    suspend fun removeAllShift()
 }
