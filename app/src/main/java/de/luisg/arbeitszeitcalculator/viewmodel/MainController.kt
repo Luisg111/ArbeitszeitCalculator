@@ -24,9 +24,12 @@ class MainController : ComponentActivity() {
         super.onCreate(savedInstanceState)
         //Repo erstellen
         repo = RoomShiftRepository(this)
-        shiftUseCases = ShiftUseCases(repository = repo)
+        shiftUseCases = ShiftUseCases(
+            repository = repo,
+            context = this
+        )
         MainScope().launch(Dispatchers.IO) {
-            shiftUseCases.exportShiftToJson(shiftUseCases.getShift(ShiftOrder.ascending))
+            shiftUseCases.exportShiftToJson(shiftUseCases.getShift(ShiftOrder.descending))
         }
         setContent {
             CreateUI()
