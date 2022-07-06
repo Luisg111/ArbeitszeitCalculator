@@ -9,24 +9,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
-import de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl.RoomShiftRepository
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.util.ShiftOrder
 import java.time.LocalDateTime
 
 @Composable
-@Preview
 fun GenerateShiftListView(
-    navController: NavController = NavController(LocalContext.current),
-    shiftUseCases: ShiftUseCases = ShiftUseCases(RoomShiftRepository(LocalContext.current))
+    navController: NavController,
+    shiftUseCases: ShiftUseCases
 ) {
     var month by remember {
         mutableStateOf(LocalDateTime.now().month.value)
