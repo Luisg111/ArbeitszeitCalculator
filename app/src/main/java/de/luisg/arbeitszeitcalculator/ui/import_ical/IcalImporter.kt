@@ -1,11 +1,17 @@
 package de.luisg.arbeitszeitcalculator.ui.import_ical
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
@@ -19,7 +25,9 @@ fun ImportIcal(
     navController: NavController,
     shiftUseCases: ShiftUseCases
 ) {
-    Column() {
+    Column(
+        modifier = Modifier.fillMaxSize()
+    ) {
         //App bar mit Titel
         TopAppBar(
             title = {
@@ -37,8 +45,12 @@ fun ImportIcal(
             }
         )
 
-        Column() {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Top
+        ) {
             var url by remember { mutableStateOf("https://calendar.google.com/calendar/ical/52sbtq3idh46n9eveh1h05glf8%40group.calendar.google.com/private-8a821bd1dd1043181ee2e190ccecc8dc/basic.ics") }
+            val context = LocalContext.current
 
             //URL Eingabefeld
             TextField(
@@ -49,7 +61,9 @@ fun ImportIcal(
             //Button zum Auslösen des Updates
             Button(onClick = {
                 MainScope().launch(Dispatchers.IO) {
-                    shiftUseCases.importShiftFromIcal(url)
+                    shiftUseCases.importShiftFromIcal(url) { error ->
+                        Toast.makeText(context, "Could not download ICal", Toast.LENGTH_LONG).show()
+                    }
                 }
                 navController.navigate("list")
             }) {
