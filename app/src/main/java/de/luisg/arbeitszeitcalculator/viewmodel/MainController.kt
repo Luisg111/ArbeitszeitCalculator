@@ -10,10 +10,6 @@ import de.luisg.arbeitszeitcalculator.ui.UiNavHost
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl.RoomShiftRepository
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
-import de.luisg.arbeitszeitcalculator.viewmodel.util.ShiftOrder
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 class MainController : ComponentActivity() {
     private lateinit var repo: ShiftRepository
@@ -28,9 +24,6 @@ class MainController : ComponentActivity() {
             repository = repo,
             context = this
         )
-        MainScope().launch(Dispatchers.IO) {
-            shiftUseCases.exportShiftToJson(shiftUseCases.getShift(ShiftOrder.descending))
-        }
         setContent {
             CreateUI()
         }

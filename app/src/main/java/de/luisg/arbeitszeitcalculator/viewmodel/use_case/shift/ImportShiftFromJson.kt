@@ -1,21 +1,19 @@
 package de.luisg.arbeitszeitcalculator.viewmodel.use_case.shift
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
+import android.content.Context
+import android.net.Uri
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import de.luisg.arbeitszeitcalculator.data.model.Shift
-import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
-import java.io.BufferedReader
-import java.io.File
-import java.io.FileReader
 
-class ImportShiftFromJson(val repository: ShiftRepository) {
-    suspend operator fun invoke(file: File) {
-        val mapper = ObjectMapper().findAndRegisterModules()
+class ImportShiftFromJson(val context: Context) {
+    suspend operator fun invoke(file: Uri): List<Shift>? {
+        val mapper = jacksonObjectMapper().findAndRegisterModules()
+        var shifts: List<Shift>? = null
 
-        BufferedReader(FileReader(file)).use { stream ->
-            mapper.readValue(stream, object : TypeReference<List<Shift>>() {}).forEach { shift ->
-                repository.addShift(shift)
-            }
+        context.contentResolver.openInputStream(file).use { stream ->
+            shifts = stream?.let { mapper.readValue(it) }
         }
+        return shifts
     }
 }

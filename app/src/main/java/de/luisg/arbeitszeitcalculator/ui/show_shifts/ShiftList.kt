@@ -1,5 +1,8 @@
 package de.luisg.arbeitszeitcalculator.ui.theme
 
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,6 +20,9 @@ import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.util.ShiftOrder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @Composable
@@ -24,6 +30,34 @@ fun GenerateShiftListView(
     navController: NavController,
     shiftUseCases: ShiftUseCases
 ) {
+    val exportJsonLauncher = rememberLauncherForActivityResult(
+        contract = CreateDocument("application/json"),
+        onResult = { uri ->
+            if (uri != null) {
+                MainScope().launch(Dispatchers.IO) {
+
+                    shiftUseCases.exportShiftToJson(
+                        shiftUseCases.getShift(ShiftOrder.ascending),
+                        uri
+                    )
+                }
+            }
+        }
+    )
+
+    val importJsonLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.OpenDocument(),
+        onResult = { uri ->
+            if (uri != null) {
+                MainScope().launch(Dispatchers.IO) {
+                    shiftUseCases.importShiftFromJson(uri)?.forEach {
+                        shiftUseCases.storeShift(it)
+                    }
+                }
+            }
+        }
+    )
+
     var month by remember {
         mutableStateOf(LocalDateTime.now().month.value)
     }
@@ -67,13 +101,19 @@ fun GenerateShiftListView(
                         DropdownMenuItem(onClick = { navController.navigate("import_ical") }) {
                             Text("Import Ical")
                         }
-                        DropdownMenuItem(onClick = { navController.navigate("import_json") }) {
+                        DropdownMenuItem(onClick = {
+                            importJsonLauncher.launch(Array(1) { "application/json" })
+                        }) {
                             Text("Import JSON")
                         }
-                        DropdownMenuItem(onClick = { navController.navigate("export_json") }) {
+                        DropdownMenuItem(onClick = { exportJsonLauncher.launch("ShiftExport") }) {
                             Text("Export JSON")
                         }
-                        DropdownMenuItem(onClick = { shiftUseCases.deleteShift }) {
+                        DropdownMenuItem(onClick = {
+                            MainScope().launch(Dispatchers.IO) {
+                                shiftUseCases.deleteShift()
+                            }
+                        }) {
                             Text("Alle Schichten löschen")
                         }
                     }
