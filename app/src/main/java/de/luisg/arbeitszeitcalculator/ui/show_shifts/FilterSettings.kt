@@ -13,6 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,11 +26,14 @@ import androidx.compose.ui.unit.sp
 fun CreateFilterSettings(
     onDateUpdate: (year: Int, month: Int) -> Unit,
     startYear: Int,
-    startMonth: Int
+    startMonth: Int,
 ) {
-    var expanded by remember { mutableStateOf(false) }
+    var monthExpanded by remember { mutableStateOf(false) }
     var month by remember { mutableStateOf(startMonth) }
     var year by remember { mutableStateOf(startYear) }
+
+    val yearFocus = remember { FocusRequester() }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -38,6 +43,7 @@ fun CreateFilterSettings(
         Box(
             modifier = Modifier
                 .fillMaxWidth(0.5F)
+                .clickable { yearFocus.requestFocus() }
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.LightGray)
                 .padding(32.dp)
@@ -57,7 +63,8 @@ fun CreateFilterSettings(
                     visualTransformation = VisualTransformation.None,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
-                    )
+                    ),
+                    modifier = Modifier.focusRequester(yearFocus)
                 )
             }
         }
@@ -65,6 +72,7 @@ fun CreateFilterSettings(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
+                .clickable { monthExpanded = true }
                 .background(Color.LightGray)
                 .padding(32.dp)
         ) {
@@ -73,12 +81,15 @@ fun CreateFilterSettings(
                 Text(
                     text = month.toString(),
                     fontSize = 32.sp,
-                    modifier = Modifier.clickable { expanded = true })
-                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                    modifier = Modifier.clickable { monthExpanded = true })
+                DropdownMenu(
+                    expanded = monthExpanded,
+                    onDismissRequest = { monthExpanded = false },
+                ) {
                     for (i in 1..12) {
                         DropdownMenuItem(onClick = {
                             month = i
-                            expanded = false
+                            monthExpanded = false
                             onDateUpdate(year, month)
                         }) {
                             Text(i.toString())
