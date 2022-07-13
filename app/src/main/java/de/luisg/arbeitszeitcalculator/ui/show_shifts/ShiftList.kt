@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
+import de.luisg.arbeitszeitcalculator.ui.show_shifts.createShiftSettings
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.util.ShiftOrder
 import kotlinx.coroutines.Dispatchers
@@ -120,7 +121,6 @@ fun GenerateShiftListView(
                 }
             )
 
-
             Spacer(Modifier.height(16.dp))
 
             //Filtereinstellungen
@@ -132,6 +132,8 @@ fun GenerateShiftListView(
                     year = nYear
                 })
 
+            Spacer(Modifier.height(16.dp))
+            createShiftSettings()
             Spacer(Modifier.height(16.dp))
 
             //Liste mit Schichten und Gesamtdauer am Ende
