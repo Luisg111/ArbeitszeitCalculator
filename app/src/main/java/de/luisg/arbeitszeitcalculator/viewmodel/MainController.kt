@@ -9,12 +9,14 @@ import androidx.navigation.compose.rememberNavController
 import de.luisg.arbeitszeitcalculator.ui.UiNavHost
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.ShiftRepository
 import de.luisg.arbeitszeitcalculator.viewmodel.Repository.impl.RoomShiftRepository
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.LoanUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 
 class MainController : ComponentActivity() {
     private lateinit var repo: ShiftRepository
     private lateinit var navHostController: NavHostController
     private lateinit var shiftUseCases: ShiftUseCases
+    private lateinit var loanUseCases: LoanUseCases
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +26,7 @@ class MainController : ComponentActivity() {
             repository = repo,
             context = this
         )
+        loanUseCases = LoanUseCases()
         setContent {
             CreateUI()
         }
@@ -34,7 +37,8 @@ class MainController : ComponentActivity() {
         navHostController = rememberNavController()
         UiNavHost(
             navController = navHostController,
-            shiftUseCases = shiftUseCases
+            shiftUseCases = shiftUseCases,
+            loanUseCases = loanUseCases
         )
     }
 }

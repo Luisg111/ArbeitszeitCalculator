@@ -16,9 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateFilterSettings
-import de.luisg.arbeitszeitcalculator.ui.show_shifts.CreateShiftListItem
-import de.luisg.arbeitszeitcalculator.ui.show_shifts.createShiftSettings
+import de.luisg.arbeitszeitcalculator.ui.shiftList.FilterSettings.CreateFilterSettings
+import de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftSettings.createShiftSettings
+import de.luisg.arbeitszeitcalculator.ui.shiftList.show_shifts.CreateShiftListItem
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.LoanUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.util.ShiftOrder
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,8 @@ import java.time.LocalDateTime
 @Composable
 fun GenerateShiftListView(
     navController: NavController,
-    shiftUseCases: ShiftUseCases
+    shiftUseCases: ShiftUseCases,
+    loanUseCases: LoanUseCases
 ) {
     val exportJsonLauncher = rememberLauncherForActivityResult(
         contract = CreateDocument("application/json"),
@@ -133,7 +135,7 @@ fun GenerateShiftListView(
                 })
 
             Spacer(Modifier.height(16.dp))
-            createShiftSettings()
+            createShiftSettings(loanUseCases)
             Spacer(Modifier.height(16.dp))
 
             //Liste mit Schichten und Gesamtdauer am Ende

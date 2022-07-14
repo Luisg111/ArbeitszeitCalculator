@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.show_shifts
+package de.luisg.arbeitszeitcalculator.ui.shiftList.FilterSettings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

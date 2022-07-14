@@ -14,12 +14,14 @@ import de.luisg.arbeitszeitcalculator.ui.create_shift.CreateShiftView
 import de.luisg.arbeitszeitcalculator.ui.import_ical.ImportIcal
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
 import de.luisg.arbeitszeitcalculator.ui.update_shift.UpdateShift
+import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.LoanUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
 
 @Composable
 fun UiNavHost(
     navController: NavHostController,
     shiftUseCases: ShiftUseCases,
+    loanUseCases: LoanUseCases
 ) {
     MaterialTheme(
         colors = MaterialTheme.colors.copy(
@@ -32,7 +34,8 @@ fun UiNavHost(
                 //Listenansicht bestehender Schichten
                 GenerateShiftListView(
                     navController = navController,
-                    shiftUseCases = shiftUseCases
+                    shiftUseCases = shiftUseCases,
+                    loanUseCases = loanUseCases
                 )
             }
             composable("create") {
