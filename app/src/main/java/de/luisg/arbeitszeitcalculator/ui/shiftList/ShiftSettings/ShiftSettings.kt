@@ -8,6 +8,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,6 +23,8 @@ fun createShiftSettings(
 ) {
     var maxHoursMonth by remember { mutableStateOf(TextFieldValue("450")) }
     var showSettings by remember { mutableStateOf(false) }
+
+    var loan by remember { mutableStateOf(TextFieldValue(loanUseCases.getLoan().toString())) }
 
     val context = LocalContext.current
 
@@ -44,16 +47,28 @@ fun createShiftSettings(
         if (showSettings) {
             Spacer(modifier = Modifier.height(6.dp))
             TextField(
-                value = loanUseCases.getLoan().toString(),
+                value = loan,
                 onValueChange = {
-                    try {
-                        loanUseCases.setLoan(it.toDouble())
-                    } catch (e: NumberFormatException) {
-                        Toast.makeText(context, "Nummer Parse Error!", Toast.LENGTH_SHORT).show()
-                    }
+                    loan = it
                 },
                 label = { Text("Stundenlohn (€)") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged {
+                        if (!it.hasFocus) {
+                            try {
+                                loanUseCases.setLoan(loan.text.toDouble())
+                            } catch (e: NumberFormatException) {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "Nummer kann nicht gelesen werden!",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            }
+                        }
+                    },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number
                 )
