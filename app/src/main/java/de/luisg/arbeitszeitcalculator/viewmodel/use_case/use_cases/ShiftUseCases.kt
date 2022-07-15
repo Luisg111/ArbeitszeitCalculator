@@ -16,4 +16,5 @@ data class ShiftUseCases(
     val importShiftFromIcal = ImportShiftFromIcal(repository)
     val exportShiftToJson = ExportShiftToJson(context)
     val importShiftFromJson = ImportShiftFromJson(context)
+    val getShiftDuration = GetShiftDuration()
 }

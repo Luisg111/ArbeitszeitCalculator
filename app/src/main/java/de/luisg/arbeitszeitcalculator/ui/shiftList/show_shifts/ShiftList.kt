@@ -3,7 +3,10 @@ package de.luisg.arbeitszeitcalculator.ui.theme
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -18,6 +21,7 @@ import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.ui.shiftList.FilterSettings.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftSettings.createShiftSettings
+import de.luisg.arbeitszeitcalculator.ui.shiftList.month_total.MonthTotal
 import de.luisg.arbeitszeitcalculator.ui.shiftList.show_shifts.CreateShiftListItem
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.LoanUseCases
 import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
@@ -87,7 +91,7 @@ fun GenerateShiftListView(
             }
         }
     ) {
-        Column() {
+        Column {
             //App Bar mit Text
             TopAppBar(
                 title = {
@@ -139,19 +143,11 @@ fun GenerateShiftListView(
             Spacer(Modifier.height(16.dp))
 
             //Liste mit Schichten und Gesamtdauer am Ende
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 0.dp)
-            ) {
-                //Monatssume ausgeben
-                Text(stringResource(R.string.ShiftListMonthTotalLabel))
-                Text(
-                    shiftUseCases.displayShiftDuration(items)
-                )
-            }
-
+            MonthTotal(
+                shiftUseCases = shiftUseCases,
+                loanUseCases = loanUseCases,
+                items = items
+            )
             Spacer(Modifier.height(16.dp))
 
             //Alle Schichten anzeigen
