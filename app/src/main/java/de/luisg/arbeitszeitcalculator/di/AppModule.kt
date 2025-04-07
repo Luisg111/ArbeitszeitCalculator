@@ -6,6 +6,7 @@ import de.luisg.arbeitszeitcalculator.domain.repository.RoomShiftRepository
 import de.luisg.arbeitszeitcalculator.domain.repository.ShiftRepository
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.LoanUseCases
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.ui.createShiftScreen.CreateShiftViewModel
 import de.luisg.arbeitszeitcalculator.ui.icalImportScreen.IcalImporterViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -29,5 +30,8 @@ val appModule = module {
 
     viewModel<IcalImporterViewModel> {
         IcalImporterViewModel()
+    }
+    viewModel<CreateShiftViewModel> {
+        CreateShiftViewModel()
     }
 }

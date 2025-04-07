@@ -19,45 +19,42 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun IcalImportRoot() {
-
-}
-
-@Composable
-fun IcalImportScreen(
-    navController: NavController,
+fun IcalImportRoot(
+    onNavigateToList: () -> Unit,
 ) {
     val viewModel: IcalImporterViewModel = koinViewModel()
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     if (state.closeWindow == true) {
-        navController.navigate("list")
+        onNavigateToList()
     }
 
+    IcalImportView(
+        viewModel = viewModel, state = state, onBackButtonPressed = { onNavigateToList() })
+}
+
+@Composable
+fun IcalImportView(
+    viewModel: IcalImporterViewModel, state: IcalImporterState, onBackButtonPressed: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         //App bar mit Titel
-        TopAppBar(
-            title = {
-                Text(stringResource(R.string.IcalImporterHeadline))
-            },
-            actions = {
-                //Gehe Zurück zur Listenansicht, wenn zurückbutton geklickt
-                IconButton(onClick = { navController.navigate("list") }) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        "go Back",
-                        tint = Color.White
-                    )
-                }
+        TopAppBar(title = {
+            Text(stringResource(R.string.IcalImporterHeadline))
+        }, actions = {
+            //Gehe Zurück zur Listenansicht, wenn zurückbutton geklickt
+            IconButton(onClick = { onBackButtonPressed() }) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack, "go Back", tint = Color.White
+                )
             }
-        )
+        })
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

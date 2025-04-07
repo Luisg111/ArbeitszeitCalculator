@@ -1,6 +1,5 @@
-package de.luisg.arbeitszeitcalculator.ui.createShift
+package de.luisg.arbeitszeitcalculator.ui.createShiftScreen
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -18,37 +17,47 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.model.Shift
-import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
+import org.koin.androidx.compose.koinViewModel
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.temporal.ChronoUnit
 
 @Composable
-fun CreateShiftView(
-    navController: NavController,
+fun CreateShiftRoot(
+    onNavigateToList: () -> Unit,
 ) {
-    val shiftUseCases: ShiftUseCases = koinInject()
-    val context = LocalContext.current
+    val viewModel: CreateShiftViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    if (state.closeWindow == true) {
+        onNavigateToList()
+    }
+
+    CreateShiftView(viewModel = viewModel, state = state, onNavigateToList = { onNavigateToList() })
+}
+
+@Composable
+fun CreateShiftView(
+    viewModel: CreateShiftViewModel,
+    state: CreateShiftState,
+    onNavigateToList: () -> Unit
+) {
+    var startDialogState = rememberMaterialDialogState()
+    var endDialogState = rememberMaterialDialogState()
+
     Column {
         //App bar mit Titel
         TopAppBar(
@@ -57,7 +66,7 @@ fun CreateShiftView(
             },
             actions = {
                 //Gehe Zurück zur Listenansicht, wenn zurückbutton geklickt
-                IconButton(onClick = { navController.navigate("list") }) {
+                IconButton(onClick = { onNavigateToList() }) {
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowBack,
                         "go Back",
@@ -75,51 +84,30 @@ fun CreateShiftView(
         ) {
 
             //Erzeuge neue Schicht mit default-Daten
-            val newShift = Shift(
+            Shift(
                 LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES),
                 LocalDateTime.now().plusHours(4).truncatedTo(ChronoUnit.MINUTES)
             )
 
-            var dateStart by remember {
-                mutableStateOf(
-                    newShift.startDateTime
-                )
-            }
-            var dateEnd by remember {
-                mutableStateOf(
-                    newShift.endDateTime
-                )
-            }
-
-            //Erzeuge DialogStates für DateTimePicker
-            val startDateDialogState = rememberMaterialDialogState()
-            val endDateDialogState = rememberMaterialDialogState()
-
-            var endDateModified = remember { false }
-
             //DateTimePicker für Start der Schicht
             DateTimePicker(
                 headerText = stringResource(R.string.CreateShiftChooseBegin),
-                startDefault = dateStart,
+                startDefault = state.startDate,
                 onOkButtonClick = {
-                    dateStart = it
-                    if (!endDateModified) {
-                        dateEnd = dateStart.plusHours(4).truncatedTo(ChronoUnit.MINUTES)
-                        endDateDialogState.show()
-                    }
+                    viewModel.addEvent(CreateShiftEvent.StartDateChanged(it))
                 },
-                dateDialogState = startDateDialogState
+                dateDialogState = startDialogState
             )
 
             //DateTimePicker für Ende der Schicht
             DateTimePicker(
                 headerText = stringResource(R.string.CreateShiftChooseEnd),
-                startDefault = dateEnd,
+                startDefault = state.endDate,
                 onOkButtonClick = {
-                    endDateModified = true
-                    dateEnd = it
+                    viewModel.addEvent(CreateShiftEvent.EndDateChanged(it))
+
                 },
-                dateDialogState = endDateDialogState
+                dateDialogState = endDialogState
             )
 
             Text(
@@ -129,10 +117,10 @@ fun CreateShiftView(
 
             //Zeige Schichtanfang
             Text(
-                text = dateStart.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                text = state.startDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                 fontSize = 32.sp,
                 modifier = Modifier
-                    .clickable { startDateDialogState.show() }
+                    .clickable { startDialogState.show() }
                     .padding(6.dp)
             )
 
@@ -145,39 +133,19 @@ fun CreateShiftView(
 
             //Zeige Schichtende
             Text(
-                text = dateEnd.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+                text = state.endDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
                 fontSize = 32.sp,
                 modifier = Modifier
-                    .clickable { endDateDialogState.show() }
+                    .clickable { endDialogState.show() }
                     .padding(6.dp)
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            val textSuccess = stringResource(R.string.CreateShiftSuccessToast)
-            val textError = stringResource(R.string.CreateShiftFailureToast)
-
             //Button zum Eintragen der neuen Schicht
             Button(
                 onClick = {
-                    MainScope().launch {
-                        try {
-                            newShift.startDateTime = dateStart
-                            newShift.endDateTime = dateEnd
-                            shiftUseCases.storeShift(newShift)
-                            Toast.makeText(
-                                context,
-                                textSuccess,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } catch (e: IllegalArgumentException) {
-                            Toast.makeText(
-                                context,
-                                textError,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    }
+                    viewModel.addEvent(CreateShiftEvent.CreateShift())
                 },
                 modifier = Modifier
                     .padding(6.dp)
