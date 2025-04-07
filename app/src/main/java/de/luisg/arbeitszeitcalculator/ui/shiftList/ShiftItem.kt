@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftList
+package de.luisg.arbeitszeitcalculator.ui.shiftList
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
+import org.koin.compose.koinInject
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -37,9 +38,9 @@ fun CreateShiftListItem(
     item: Shift,
     backgroundColor: Color,
     foregroundColor: Color,
-    shiftUseCases: ShiftUseCases,
     navController: NavController
 ) {
+    val shiftUseCases: ShiftUseCases = koinInject()
     //DismissState für das Löschen von Schichten
     val state = rememberDismissState()
 
@@ -83,7 +84,7 @@ fun CreateShiftListItem(
                     .fillMaxWidth()
                     .padding(horizontal = 6.dp)
             ) {
-                Column() {
+                Column {
                     //Anfangsdatum als text
                     Text(
                         text =

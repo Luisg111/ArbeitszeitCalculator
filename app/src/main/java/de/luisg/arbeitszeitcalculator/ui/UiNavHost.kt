@@ -5,24 +5,19 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import de.luisg.arbeitszeitcalculator.ui.createShift.CreateShiftView
 import de.luisg.arbeitszeitcalculator.ui.importIcal.ImportIcal
-import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
+import de.luisg.arbeitszeitcalculator.ui.shiftList.GenerateShiftListView
 import de.luisg.arbeitszeitcalculator.ui.updateShift.UpdateShift
-import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.LoanUseCases
-import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
 
 @Composable
-fun UiNavHost(
-    navController: NavHostController,
-    shiftUseCases: ShiftUseCases,
-    loanUseCases: LoanUseCases
-) {
+fun UiNavHost() {
+    val navController = rememberNavController()
     MaterialTheme(
         colors = MaterialTheme.colors.copy(
             primary = Color(70, 120, 255)
@@ -34,14 +29,11 @@ fun UiNavHost(
                 //Listenansicht bestehender Schichten
                 GenerateShiftListView(
                     navController = navController,
-                    shiftUseCases = shiftUseCases,
-                    loanUseCases = loanUseCases
                 )
             }
             composable("create") {
                 //Neue Schicht eintragen
                 CreateShiftView(
-                    shiftUseCases = shiftUseCases,
                     navController = navController
                 )
             }
@@ -53,7 +45,6 @@ fun UiNavHost(
                 if (it.arguments != null) {
                     UpdateShift(
                         id = it.arguments!!.getInt("shiftId"),
-                        shiftUseCases = shiftUseCases,
                         navController = navController
                     )
                 } else {
@@ -69,7 +60,6 @@ fun UiNavHost(
                 //Schichten Importieren
                 ImportIcal(
                     navController = navController,
-                    shiftUseCases = shiftUseCases
                 )
             }
         }

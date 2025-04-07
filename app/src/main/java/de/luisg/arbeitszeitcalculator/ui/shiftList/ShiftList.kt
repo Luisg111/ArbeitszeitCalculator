@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.theme
+package de.luisg.arbeitszeitcalculator.ui.shiftList
 
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -9,40 +9,51 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.ui.shiftList.FilterSettings.CreateFilterSettings
-import de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftSettings.createShiftSettings
-import de.luisg.arbeitszeitcalculator.ui.shiftList.month_total.MonthTotal
-import de.luisg.arbeitszeitcalculator.ui.shiftList.show_shifts.CreateShiftListItem
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.LoanUseCases
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.domain.util.ShiftOrder
+import de.luisg.arbeitszeitcalculator.ui.shiftSettings.createShiftSettings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import java.time.LocalDateTime
 
 @Composable
 fun GenerateShiftListView(
     navController: NavController,
-    shiftUseCases: ShiftUseCases,
-    loanUseCases: LoanUseCases
 ) {
+    val shiftUseCases = koinInject<ShiftUseCases>()
+    val loanUseCases = koinInject<LoanUseCases>()
+
     val exportJsonLauncher = rememberLauncherForActivityResult(
         contract = CreateDocument("application/json"),
         onResult = { uri ->
             if (uri != null) {
                 MainScope().launch(Dispatchers.IO) {
-
                     shiftUseCases.exportShiftToJson(
                         shiftUseCases.getShift(ShiftOrder.Ascending),
                         uri
@@ -90,8 +101,8 @@ fun GenerateShiftListView(
                 Icon(Icons.Filled.Add, "")
             }
         }
-    ) {
-        Column {
+    ) { padding ->
+        Column(modifier = Modifier.padding(padding)) {
             //App Bar mit Text
             TopAppBar(
                 title = {
@@ -144,8 +155,6 @@ fun GenerateShiftListView(
 
             //Liste mit Schichten und Gesamtdauer am Ende
             MonthTotal(
-                shiftUseCases = shiftUseCases,
-                loanUseCases = loanUseCases,
                 items = items
             )
             Spacer(Modifier.height(16.dp))
@@ -157,7 +166,6 @@ fun GenerateShiftListView(
                         item = item,
                         backgroundColor = MaterialTheme.colors.primary,
                         foregroundColor = MaterialTheme.colors.onPrimary,
-                        shiftUseCases = shiftUseCases,
                         navController = navController
                     )
                 }

@@ -28,12 +28,13 @@ import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 
 @Composable
 fun ImportIcal(
     navController: NavController,
-    shiftUseCases: ShiftUseCases
 ) {
+    val shiftUseCases: ShiftUseCases = koinInject()
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

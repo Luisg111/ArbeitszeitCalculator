@@ -1,21 +1,11 @@
 package de.luisg.arbeitszeitcalculator.domain.repository
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import androidx.room.Room
 import de.luisg.arbeitszeitcalculator.data.data_source.ShiftDatabase
 import de.luisg.arbeitszeitcalculator.data.model.Shift
 import kotlinx.coroutines.flow.Flow
 
-class RoomShiftRepository(context: Context) : ShiftRepository, ViewModel() {
-    val db: ShiftDatabase
-
-    init {
-        db = Room.databaseBuilder(
-            context,
-            ShiftDatabase::class.java, "database-name"
-        ).build()
-    }
+class RoomShiftRepository(private val db: ShiftDatabase) : ShiftRepository, ViewModel() {
 
     override fun getShiftsForYearMonthAsFlow(year: Int, month: Int): Flow<List<Shift>> {
         return db.shiftDao.getByYearMonthAsFlow("%04d".format(year), "%02d".format(month))

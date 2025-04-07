@@ -11,6 +11,7 @@
 
     <application
         android:allowBackup="true"
+        android:name=".ArbeitszeitCalculatorApp"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -20,9 +21,8 @@
         android:theme="@style/Theme.ArbeitszeitCalculator"
         tools:targetApi="32">
         <activity
-            android:name=".domain.MainController"
+            android:name=".MainComponentActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.MaterialComponents.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

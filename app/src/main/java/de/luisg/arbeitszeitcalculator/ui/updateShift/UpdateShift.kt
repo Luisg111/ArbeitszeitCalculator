@@ -33,19 +33,20 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
 @Composable
 fun UpdateShift(
     id: Int,
-    shiftUseCases: ShiftUseCases,
     navController: NavHostController
 ) {
+    val shiftUseCases: ShiftUseCases = koinInject()
     val context = LocalContext.current
     Column {
         //App bar mit Titel
@@ -77,7 +78,7 @@ fun UpdateShift(
                 initial = null
             )
 
-            newShift?.let() {
+            newShift?.let {
                 var dateStart by remember {
                     mutableStateOf(
                         newShift!!.startDateTime

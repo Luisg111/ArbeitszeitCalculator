@@ -33,10 +33,11 @@ import androidx.navigation.NavController
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.model.Shift
-import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import org.koin.compose.koinInject
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -45,8 +46,8 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun CreateShiftView(
     navController: NavController,
-    shiftUseCases: ShiftUseCases
 ) {
+    val shiftUseCases: ShiftUseCases = koinInject()
     val context = LocalContext.current
     Column {
         //App bar mit Titel
