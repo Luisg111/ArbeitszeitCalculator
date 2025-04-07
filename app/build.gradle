@@ -94,10 +94,9 @@ dependencies {
     implementation platform("io.insert-koin:koin-bom:4.0.4")
 
     // Declare the koin dependencies that you need
+    implementation("io.insert-koin:koin-android")
     implementation("io.insert-koin:koin-androidx-compose")
     implementation("io.insert-koin:koin-androidx-compose-navigation")
 
-    // Works with test libraries too!
-    testImplementation("io.insert-koin:koin-test-junit4")
-    testImplementation("io.insert-koin:koin-android-test")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-android:2.8.7")
 }

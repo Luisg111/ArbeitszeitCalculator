@@ -1,6 +1,5 @@
-package de.luisg.arbeitszeitcalculator.ui.importIcal
+package de.luisg.arbeitszeitcalculator.ui.icalImportScreen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,27 +13,32 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import org.koin.compose.koinInject
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun ImportIcal(
+fun IcalImportRoot() {
+
+}
+
+@Composable
+fun IcalImportScreen(
     navController: NavController,
 ) {
-    val shiftUseCases: ShiftUseCases = koinInject()
+    val viewModel: IcalImporterViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    if (state.closeWindow == true) {
+        navController.navigate("list")
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -59,23 +63,17 @@ fun ImportIcal(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
         ) {
-            var url by remember { mutableStateOf("https://calendar.google.com/calendar/ical/52sbtq3idh46n9eveh1h05glf8%40group.calendar.google.com/private-8a821bd1dd1043181ee2e190ccecc8dc/basic.ics") }
-            val context = LocalContext.current
+            LocalContext.current
 
             //URL Eingabefeld
             TextField(
                 label = { Text("url zur ical") },
-                value = url,
-                onValueChange = { url = it })
+                value = state.url,
+                onValueChange = { viewModel.addEvent(IcalImporterEvent.UrlChanged(it)) })
 
             //Button zum Auslösen des Updates
             Button(onClick = {
-                MainScope().launch(Dispatchers.IO) {
-                    shiftUseCases.importShiftFromIcal(url) { error ->
-                        Toast.makeText(context, "Could not download ICal", Toast.LENGTH_LONG).show()
-                    }
-                }
-                navController.navigate("list")
+                viewModel.addEvent(IcalImporterEvent.ImportStarted())
             }) {
                 Text("Ical Herunterladen & Importieren")
             }

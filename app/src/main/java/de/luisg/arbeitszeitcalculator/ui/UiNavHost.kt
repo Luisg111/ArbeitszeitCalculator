@@ -11,7 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import de.luisg.arbeitszeitcalculator.ui.createShift.CreateShiftView
-import de.luisg.arbeitszeitcalculator.ui.importIcal.ImportIcal
+import de.luisg.arbeitszeitcalculator.ui.icalImportScreen.IcalImportScreen
 import de.luisg.arbeitszeitcalculator.ui.shiftList.GenerateShiftListView
 import de.luisg.arbeitszeitcalculator.ui.updateShift.UpdateShift
 
@@ -58,7 +58,7 @@ fun UiNavHost() {
             }
             composable("import_ical") {
                 //Schichten Importieren
-                ImportIcal(
+                IcalImportScreen(
                     navController = navController,
                 )
             }
