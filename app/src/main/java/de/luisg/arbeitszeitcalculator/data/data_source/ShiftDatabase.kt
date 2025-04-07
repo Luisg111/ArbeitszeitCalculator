@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import de.luisg.arbeitszeitcalculator.data.model.Shift
-import de.luisg.arbeitszeitcalculator.viewmodel.util.LocalDateTimeConverter
+import de.luisg.arbeitszeitcalculator.domain.util.LocalDateTimeConverter
 
 @Database(
     entities = [Shift::class],

@@ -10,12 +10,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import de.luisg.arbeitszeitcalculator.ui.create_shift.CreateShiftView
-import de.luisg.arbeitszeitcalculator.ui.import_ical.ImportIcal
+import de.luisg.arbeitszeitcalculator.ui.createShift.CreateShiftView
+import de.luisg.arbeitszeitcalculator.ui.importIcal.ImportIcal
 import de.luisg.arbeitszeitcalculator.ui.theme.GenerateShiftListView
-import de.luisg.arbeitszeitcalculator.ui.update_shift.UpdateShift
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.LoanUseCases
-import de.luisg.arbeitszeitcalculator.viewmodel.use_case.use_cases.ShiftUseCases
+import de.luisg.arbeitszeitcalculator.ui.updateShift.UpdateShift
+import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.LoanUseCases
+import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
 
 @Composable
 fun UiNavHost(

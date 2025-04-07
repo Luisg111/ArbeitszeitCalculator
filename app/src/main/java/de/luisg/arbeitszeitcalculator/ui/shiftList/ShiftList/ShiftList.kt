@@ -19,10 +19,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.R
-import de.luisg.arbeitszeitcalculator.ui.shiftList.FilterSettings.CreateFilterSettings
+import de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftList.CreateFilterSettings
 import de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftSettings.createShiftSettings
-import de.luisg.arbeitszeitcalculator.ui.shiftList.month_total.MonthTotal
-import de.luisg.arbeitszeitcalculator.ui.shiftList.show_shifts.CreateShiftListItem
+import de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftList.MonthTotal
+import de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftList.CreateShiftListItem
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.LoanUseCases
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
 import de.luisg.arbeitszeitcalculator.domain.util.ShiftOrder
@@ -90,8 +90,8 @@ fun GenerateShiftListView(
                 Icon(Icons.Filled.Add, "")
             }
         }
-    ) {
-        Column {
+    ) { padding ->
+        Column(modifier = Modifier.padding(padding)) {
             //App Bar mit Text
             TopAppBar(
                 title = {

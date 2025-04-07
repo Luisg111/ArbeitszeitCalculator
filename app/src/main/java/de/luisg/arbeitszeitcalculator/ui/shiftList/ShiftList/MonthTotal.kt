@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.shiftList.month_total
+package de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftList
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

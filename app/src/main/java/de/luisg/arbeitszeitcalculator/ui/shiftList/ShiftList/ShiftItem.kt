@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.shiftList.show_shifts
+package de.luisg.arbeitszeitcalculator.ui.shiftList.ShiftList
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
