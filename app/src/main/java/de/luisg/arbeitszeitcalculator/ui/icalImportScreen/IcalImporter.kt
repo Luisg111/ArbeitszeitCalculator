@@ -3,9 +3,11 @@ package de.luisg.arbeitszeitcalculator.ui.icalImportScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
@@ -41,24 +43,26 @@ fun IcalImportRoot(
 fun IcalImportView(
     viewModel: IcalImporterViewModel, state: IcalImporterState, onBackButtonPressed: () -> Unit
 ) {
-    Column(
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {
+                Text(stringResource(R.string.IcalImporterHeadline))
+            }, actions = {
+                //Gehe Zurück zur Listenansicht, wenn zurückbutton geklickt
+                IconButton(onClick = { onBackButtonPressed() }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack, "go Back", tint = Color.White
+                    )
+                }
+            })
+        },
         modifier = Modifier.fillMaxSize()
-    ) {
-        //App bar mit Titel
-        TopAppBar(title = {
-            Text(stringResource(R.string.IcalImporterHeadline))
-        }, actions = {
-            //Gehe Zurück zur Listenansicht, wenn zurückbutton geklickt
-            IconButton(onClick = { onBackButtonPressed() }) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack, "go Back", tint = Color.White
-                )
-            }
-        })
-
+    ) { padding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.padding(padding)
+
         ) {
             LocalContext.current
 

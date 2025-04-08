@@ -93,17 +93,7 @@ fun GenerateShiftListView(
 
     //Scaffold für Action Button
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("create") },
-                backgroundColor = MaterialTheme.colors.primary
-            ) {
-                Icon(Icons.Filled.Add, "")
-            }
-        }
-    ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
-            //App Bar mit Text
+        topBar = {
             TopAppBar(
                 title = {
                     Text(stringResource(R.string.ShiftListHeadline))
@@ -137,9 +127,21 @@ fun GenerateShiftListView(
                     }
                 }
             )
-
-            Spacer(Modifier.height(16.dp))
-
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate("create") },
+                backgroundColor = MaterialTheme.colors.primary
+            ) {
+                Icon(Icons.Filled.Add, "")
+            }
+        }
+    ) { padding ->
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .padding(top = 16.dp)
+        ) {
             //Filtereinstellungen
             CreateFilterSettings(
                 startYear = year,

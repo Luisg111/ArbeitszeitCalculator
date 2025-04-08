@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -55,36 +56,32 @@ fun CreateShiftRoot(
 
 @Composable
 fun CreateShiftView(
-    viewModel: CreateShiftViewModel,
-    state: CreateShiftState,
-    onNavigateToList: () -> Unit
+    viewModel: CreateShiftViewModel, state: CreateShiftState, onNavigateToList: () -> Unit
 ) {
     var startDialogState = rememberMaterialDialogState()
     var endDialogState = rememberMaterialDialogState()
 
-    Column {
-        //App bar mit Titel
-        TopAppBar(
-            title = {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = {
                 Text(stringResource(R.string.CreateShiftHeadline))
-            },
-            actions = {
+            }, actions = {
                 //Gehe Zurück zur Listenansicht, wenn zurückbutton geklickt
                 IconButton(onClick = { onNavigateToList() }) {
                     Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        "go Back",
-                        tint = Color.White
+                        Icons.AutoMirrored.Filled.ArrowBack, "go Back", tint = Color.White
                     )
                 }
-            }
-        )
+            })
 
+        }) { padding ->
         //Zeige Start- und Enddatum mit Uhrzeiten
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
         ) {
 
             //Erzeuge neue Schicht mit default-Daten
@@ -125,8 +122,7 @@ fun CreateShiftView(
                 fontSize = 32.sp,
                 modifier = Modifier
                     .clickable { startDialogState.show() }
-                    .padding(6.dp)
-            )
+                    .padding(6.dp))
 
             Spacer(modifier = Modifier.height(64.dp))
 
@@ -141,8 +137,7 @@ fun CreateShiftView(
                 fontSize = 32.sp,
                 modifier = Modifier
                     .clickable { endDialogState.show() }
-                    .padding(6.dp)
-            )
+                    .padding(6.dp))
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -150,8 +145,7 @@ fun CreateShiftView(
             Button(
                 onClick = {
                     viewModel.addEvent(CreateShiftEvent.CreateShift())
-                },
-                modifier = Modifier
+                }, modifier = Modifier
                     .padding(6.dp)
                     .fillMaxWidth()
             ) {
