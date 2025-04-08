@@ -31,7 +31,7 @@ val appModule = module {
     viewModel<IcalImporterViewModel> {
         IcalImporterViewModel()
     }
-    viewModel<CreateShiftViewModel> {
-        CreateShiftViewModel()
+    viewModel<CreateShiftViewModel> { (shiftId: Int?) ->
+        CreateShiftViewModel(id = shiftId)
     }
 }

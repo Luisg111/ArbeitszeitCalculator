@@ -13,7 +13,7 @@ interface ShiftRepository {
     fun getShiftAsFlow(id: Int): Flow<Shift>
     suspend fun getShift(id: Int): Shift
 
-    suspend fun addShift(shift: Shift)
+    suspend fun upsertShift(shift: Shift): Long
 
     suspend fun removeShift(shift: Shift)
 

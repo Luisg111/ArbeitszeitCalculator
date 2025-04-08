@@ -31,8 +31,8 @@ class RoomShiftRepository(private val db: ShiftDatabase) : ShiftRepository, View
         return db.shiftDao.getShift(id)
     }
 
-    override suspend fun addShift(shift: Shift) {
-        db.shiftDao.addShift(shift)
+    override suspend fun upsertShift(shift: Shift): Long {
+        return db.shiftDao.upsertShift(shift)
     }
 
     override suspend fun removeShift(shift: Shift) {

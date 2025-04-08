@@ -7,9 +7,9 @@ class StoreShift(
     val repository: ShiftRepository
 ) {
     @Throws(IllegalArgumentException::class)
-    suspend operator fun invoke(shift: Shift) {
+    suspend operator fun invoke(shift: Shift): Long {
         if (shift.startDateTime.isBefore(shift.endDateTime)) {
-            repository.addShift(shift)
+            return repository.upsertShift(shift)
         } else {
             throw IllegalArgumentException("Shift startDateTime must be before endDateTime")
         }

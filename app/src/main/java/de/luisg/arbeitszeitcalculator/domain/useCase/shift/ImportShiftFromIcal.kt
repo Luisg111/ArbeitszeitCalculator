@@ -32,7 +32,7 @@ class ImportShiftFromIcal(val repository: ShiftRepository) {
                             )
                         )
                         if (!it.contains(shift)) {
-                            repository.addShift(shift)
+                            repository.upsertShift(shift)
                         }
                     }
                 }

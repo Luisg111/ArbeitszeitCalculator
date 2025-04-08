@@ -15,23 +15,46 @@ import org.koin.core.component.inject
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-class CreateShiftViewModel : ViewModel(), KoinComponent {
+class CreateShiftViewModel(id: Int?) : ViewModel(), KoinComponent {
     private val shiftUseCases by inject<ShiftUseCases>()
 
     private val _state = MutableStateFlow(CreateShiftState())
     val state = _state.onStart {
-        //initData
+        if (_state.value.loadedId != null) {
+            loadShift(_state.value.loadedId!!)
+        }
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000L),
-        initialValue = CreateShiftState()
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = CreateShiftState(),
     )
+
+    init {
+        if (id != null) {
+            _state.update { it.copy(loadedId = id) }
+        }
+    }
 
     fun addEvent(event: CreateShiftEvent) {
         when (event) {
             is CreateShiftEvent.StartDateChanged -> startDateChanged(event.date)
             is CreateShiftEvent.EndDateChanged -> endDateChanged(event.date)
-            is CreateShiftEvent.CreateShift -> createShift()
+            is CreateShiftEvent.CreateShift -> storeShift()
+        }
+    }
+
+    private fun loadShift(id: Int) {
+        viewModelScope.launch {
+            val shift = shiftUseCases.getShift(id)
+            _state.update {
+                it.copy(
+                    startDate = shift.startDateTime,
+                    endDate = shift.endDateTime,
+                    endDateModified = true,
+                    loadedId = id,
+                )
+            }
+
         }
     }
 
@@ -53,15 +76,16 @@ class CreateShiftViewModel : ViewModel(), KoinComponent {
     }
 
     //TODO:Add Error Handling
-    private fun createShift() {
+    private fun storeShift() {
         viewModelScope.launch {
             try {
                 var newShift = Shift(
+                    id = _state.value.loadedId,
                     startDateTime = _state.value.startDate,
                     endDateTime = _state.value.endDate,
                 )
-                shiftUseCases.storeShift(newShift)
-                _state.update { it.copy(closeWindow = true) }/*Toast.makeText(
+                var storedShiftId = shiftUseCases.storeShift(newShift)
+                _state.update { it.copy(closeWindow = true, loadedId = storedShiftId.toInt()) }/*Toast.makeText(
                     context,
                     textSuccess,
                     Toast.LENGTH_SHORT

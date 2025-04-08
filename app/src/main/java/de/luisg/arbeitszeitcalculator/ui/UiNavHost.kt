@@ -13,7 +13,6 @@ import androidx.navigation.navArgument
 import de.luisg.arbeitszeitcalculator.ui.createShiftScreen.CreateShiftRoot
 import de.luisg.arbeitszeitcalculator.ui.icalImportScreen.IcalImportRoot
 import de.luisg.arbeitszeitcalculator.ui.shiftList.GenerateShiftListView
-import de.luisg.arbeitszeitcalculator.ui.updateShift.UpdateShift
 
 @Composable
 fun UiNavHost() {
@@ -34,7 +33,8 @@ fun UiNavHost() {
             composable("create") {
                 //Neue Schicht eintragen
                 CreateShiftRoot(
-                    onNavigateToList = { navController.navigate("list") }
+                    onNavigateToList = { navController.navigate("list") },
+                    shiftId = null,
                 )
             }
             composable(
@@ -43,9 +43,9 @@ fun UiNavHost() {
             ) {
                 //Schicht aktualisieren
                 if (it.arguments != null) {
-                    UpdateShift(
-                        id = it.arguments!!.getInt("shiftId"),
-                        navController = navController
+                    CreateShiftRoot(
+                        onNavigateToList = { navController.navigate("list") },
+                        shiftId = it.arguments!!.getInt("shiftId"),
                     )
                 } else {
                     Toast.makeText(

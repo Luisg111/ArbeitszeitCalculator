@@ -30,6 +30,7 @@ import de.luisg.arbeitszeitcalculator.R
 import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.ui.common.DateTimePicker.DateTimePicker
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -38,8 +39,11 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun CreateShiftRoot(
     onNavigateToList: () -> Unit,
+    shiftId: Int?,
 ) {
-    val viewModel: CreateShiftViewModel = koinViewModel()
+    val viewModel: CreateShiftViewModel = koinViewModel {
+        parametersOf(shiftId)
+    }
     val state by viewModel.state.collectAsStateWithLifecycle()
 
     if (state.closeWindow == true) {
