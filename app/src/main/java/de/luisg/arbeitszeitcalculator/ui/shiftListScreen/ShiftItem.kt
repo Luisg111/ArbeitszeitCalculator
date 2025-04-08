@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.shiftList
+package de.luisg.arbeitszeitcalculator.ui.shiftListScreen
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -25,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import de.luisg.arbeitszeitcalculator.data.model.Shift
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.ShiftUseCases
 import org.koin.compose.koinInject
@@ -38,7 +37,7 @@ fun CreateShiftListItem(
     item: Shift,
     backgroundColor: Color,
     foregroundColor: Color,
-    navController: NavController
+    onNavigateToShift: (id: Int) -> Unit,
 ) {
     val shiftUseCases: ShiftUseCases = koinInject()
     //DismissState für das Löschen von Schichten
@@ -75,9 +74,10 @@ fun CreateShiftListItem(
                 .clip(RoundedCornerShape(4.dp))
                 .background(color)
                 .clickable {
-                    navController.navigate("update/${item.id}")
-                }
-        ) {
+                    if (item.id != null) {
+                        onNavigateToShift(item.id)
+                    }
+                }) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
@@ -87,8 +87,7 @@ fun CreateShiftListItem(
                 Column {
                     //Anfangsdatum als text
                     Text(
-                        text =
-                        DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
+                        text = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
                             .format(item.startDateTime.toLocalDate()),
                         fontWeight = FontWeight.Bold,
                         fontSize = 16.sp,
@@ -103,14 +102,12 @@ fun CreateShiftListItem(
                         } - ${
                             DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)
                                 .format(item.endDateTime.toLocalTime())
-                        }""",
-                        color = foregroundColor
+                        }""", color = foregroundColor
                     )
                 }
                 //Dauer als Text
                 Text(
-                    shiftUseCases.displayShiftDuration(item),
-                    color = foregroundColor
+                    shiftUseCases.displayShiftDuration(item), color = foregroundColor
                 )
             }
         }

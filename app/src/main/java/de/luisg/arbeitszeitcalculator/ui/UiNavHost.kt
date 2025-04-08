@@ -12,7 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import de.luisg.arbeitszeitcalculator.ui.createShiftScreen.CreateShiftRoot
 import de.luisg.arbeitszeitcalculator.ui.icalImportScreen.IcalImportRoot
-import de.luisg.arbeitszeitcalculator.ui.shiftList.GenerateShiftListView
+import de.luisg.arbeitszeitcalculator.ui.shiftListScreen.ShiftListRoot
 
 @Composable
 fun UiNavHost() {
@@ -26,9 +26,14 @@ fun UiNavHost() {
         NavHost(navController = navController, startDestination = "list") {
             composable("list") {
                 //Listenansicht bestehender Schichten
-                GenerateShiftListView(
-                    navController = navController,
-                )
+                ShiftListRoot(
+                    onNavigateToNewShift = { navController.navigate("create") },
+                    onNavigateToIcalImport = {
+                        navController.navigate("import_ical")
+                    },
+                    onNavigateToShift = {
+                        navController.navigate("update/${it}")
+                    })
             }
             composable("create") {
                 //Neue Schicht eintragen
@@ -59,8 +64,7 @@ fun UiNavHost() {
             composable("import_ical") {
                 //Schichten Importieren
                 IcalImportRoot(
-                    onNavigateToList = { navController.navigate("list") }
-                )
+                    onNavigateToList = { navController.navigate("list") })
             }
         }
     }

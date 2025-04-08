@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.shiftSettings
+package de.luisg.arbeitszeitcalculator.ui.shiftListScreen
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import de.luisg.arbeitszeitcalculator.domain.useCase.use_cases.LoanUseCases
 
 @Composable
-fun createShiftSettings(
+fun ShiftSettings(
     loanUseCases: LoanUseCases
 ) {
     var maxHoursMonth by remember { mutableStateOf(TextFieldValue("450")) }
