@@ -23,26 +23,55 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
     private val shiftUseCases by inject<ShiftUseCases>()
     private val loanUseCases by inject<LoanUseCases>()
 
+    private var hasLoadedData = false
+
     private val _state = MutableStateFlow(ShiftListState())
 
-    private val _shiftFlow = _state.flatMapLatest { latestState ->
-        shiftUseCases.getShiftLive(ShiftOrder.Ascending, latestState.year, latestState.month)
-    }
+    private val _monthFlow = MutableStateFlow(0)
+    private val _yearFlow = MutableStateFlow(0)
 
-    val state = _state.onStart {
-        val salary = loanUseCases.getLoan()
-        _state.update {
-            it.copy(salary = salary.toString())
+    private val _shiftFlow =
+        _monthFlow.combine(_yearFlow) { month, year ->
+            println("new flow created!")
+            month to year
+        }.flatMapLatest { latestState ->
+            shiftUseCases.getShiftLive(ShiftOrder.Ascending, latestState.second, latestState.first)
         }
-    }.combine(_shiftFlow) { state, shiftItems ->
-        state.copy(listItems = shiftItems)
+
+    val state = _state.combine(_shiftFlow) { state, shiftItems ->
+        state.copy(
+            listItems = shiftItems,
+            hourSummaryString = shiftUseCases.displayShiftDuration(shiftItems),
+            salarySummaryString = "${
+                (loanUseCases.getLoan() * (shiftUseCases.getShiftDuration(shiftItems)
+                    .toMinutes() / 60.0))
+            } €"
+        )
+    }.combine(_yearFlow) { state, year ->
+        state.copy(year = year)
+    }.combine(_monthFlow) { state, month ->
+        state.copy(month = month)
+    }.onStart {
+        if (!hasLoadedData) {
+            val salary = loanUseCases.getLoan()
+            _state.update {
+                it.copy(salary = salary.toString())
+            }
+            _monthFlow.update {
+                _state.value.month
+            }
+            _yearFlow.update {
+                _state.value.year
+            }
+            hasLoadedData = true
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),
         initialValue = ShiftListState()
     )
 
-    fun addEvent(event: ShiftListEvent) {
+    fun onEvent(event: ShiftListEvent) {
         when (event) {
             is ShiftListEvent.ExportToJson -> exportToJson(event.uri)
             is ShiftListEvent.ImportFromJson -> importFromJson(event.uri)
@@ -86,14 +115,14 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
     }
 
     private fun selectedYearChanged(year: Int) {
-        _state.update {
-            it.copy(year = year)
+        _yearFlow.update {
+            year
         }
     }
 
     private fun selectedMonthChanged(month: Int) {
-        _state.update {
-            it.copy(month = month)
+        _monthFlow.update {
+            month
         }
     }
 
@@ -107,13 +136,15 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
     private fun salaryChanged(salary: String) {
         val parsedValue = salary.toDoubleOrNull()
 
+        if (parsedValue != null) {
+            loanUseCases.setLoan(parsedValue)
+        }
+
         _state.update {
             it.copy(salary = salary, salaryError = parsedValue == null)
         }
 
-        if (parsedValue != null) {
-            loanUseCases.setLoan(parsedValue)
-        }
+
     }
 
     private fun monthOverviewToggled(isOpen: Boolean?) {

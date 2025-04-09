@@ -44,12 +44,14 @@ fun ShiftListRoot(
     onNavigateToShift: (Int) -> Unit,
 ) {
     val viewModel: ShiftListViewModel = koinViewModel()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ShiftListView(
         onNavigateToShift = { onNavigateToShift(it) },
         onNavigateToNewShift = { onNavigateToNewShift() },
         onNavigateToIcalImport = { onNavigateToIcalImport() },
-        viewModel = viewModel,
+        state = state,
+        onEvent = viewModel::onEvent,
     )
 }
 
@@ -58,21 +60,21 @@ fun ShiftListView(
     onNavigateToIcalImport: () -> Unit,
     onNavigateToNewShift: () -> Unit,
     onNavigateToShift: (id: Int) -> Unit,
-    viewModel: ShiftListViewModel,
+    state: ShiftListState,
+    onEvent: (ShiftListEvent) -> Unit,
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val exportJsonLauncher = rememberLauncherForActivityResult(
         contract = CreateDocument("application/json"), onResult = { uri ->
             if (uri != null) {
-                viewModel.addEvent(ShiftListEvent.ExportToJson(uri))
+                onEvent(ShiftListEvent.ExportToJson(uri))
             }
         })
 
     val importJsonLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(), onResult = { uri ->
             if (uri != null) {
-                viewModel.addEvent(ShiftListEvent.ImportFromJson(uri))
+                onEvent(ShiftListEvent.ImportFromJson(uri))
             }
         })
 
@@ -84,12 +86,12 @@ fun ShiftListView(
                 stringResource(R.string.ShiftListHeadline),
             )
         }, actions = {
-            IconButton(onClick = { viewModel.addEvent(ShiftListEvent.IoMenuToggled()) }) {
+            IconButton(onClick = { onEvent(ShiftListEvent.IoMenuToggled()) }) {
                 Icon(Icons.Filled.MoreVert, "more...")
             }
             DropdownMenu(
                 expanded = state.ioMenuExtended,
-                onDismissRequest = { viewModel.addEvent(ShiftListEvent.IoMenuToggled(false)) }) {
+                onDismissRequest = { onEvent(ShiftListEvent.IoMenuToggled(false)) }) {
                 DropdownMenuItem(onClick = { onNavigateToIcalImport() }) {
                     Text("Import Ical")
                 }
@@ -102,7 +104,7 @@ fun ShiftListView(
                     Text("Export JSON")
                 }
                 DropdownMenuItem(onClick = {
-                    viewModel.addEvent(ShiftListEvent.DeleteAllShifts())
+                    onEvent(ShiftListEvent.DeleteAllShifts())
                 }) {
                     Text("Alle Schichten löschen")
                 }
@@ -122,20 +124,22 @@ fun ShiftListView(
         ) {
             //Filtereinstellungen
             CreateFilterSettings(
-                year = state.year, month = state.month, onDateUpdate = { nYear, nMonth ->
-                    viewModel.addEvent(ShiftListEvent.SelectedYearChanged(nYear))
-                    viewModel.addEvent(ShiftListEvent.SelectedMonthChanged(nMonth))
+                year = state.year,
+                month = state.month,
+                onDateUpdate = { nYear, nMonth ->
+                    onEvent(ShiftListEvent.SelectedYearChanged(nYear))
+                    onEvent(ShiftListEvent.SelectedMonthChanged(nMonth))
                 }, monthExpanded = state.monthMenuOpen, monthSelectorToggled = {
-                    viewModel.addEvent(ShiftListEvent.MonthMenuToggled())
+                    onEvent(ShiftListEvent.MonthMenuToggled())
                 })
 
             Spacer(Modifier.height(16.dp))
             ShiftSettings(
                 salary = state.salary,
                 settingsExtended = state.settingsExtended,
-                onSettingsToggled = { viewModel.addEvent(ShiftListEvent.SettingsMenuToggled()) },
+                onSettingsToggled = { onEvent(ShiftListEvent.SettingsMenuToggled()) },
                 onSalaryChanged = {
-                    viewModel.addEvent(
+                    onEvent(
                         ShiftListEvent.SalaryChanged(
                             it
                         )
@@ -149,7 +153,7 @@ fun ShiftListView(
             MonthTotal(
                 itemsVisible = state.monthOverviewExtended,
                 onItemsVisibilityToggled = {
-                    viewModel.addEvent(
+                    onEvent(
                         ShiftListEvent.MonthOverviewToggled(
                             it
                         )
