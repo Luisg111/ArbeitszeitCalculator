@@ -15,10 +15,7 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +31,11 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun CreateFilterSettings(
     onDateUpdate: (year: Int, month: Int) -> Unit,
-    startYear: Int,
-    startMonth: Int,
+    year: Int,
+    month: Int,
+    monthExpanded: Boolean,
+    monthSelectorToggled: (isOpen: Boolean) -> Unit,
 ) {
-    var monthExpanded by remember { mutableStateOf(false) }
-    var month by remember { mutableStateOf(startMonth) }
-    var year by remember { mutableStateOf(startYear) }
 
     val yearFocus = remember { FocusRequester() }
 
@@ -63,8 +59,7 @@ fun CreateFilterSettings(
                     value = year.toString(), onValueChange = {
                         val newYear = it.toIntOrNull()
                         if (newYear != null && newYear > 0) {
-                            year = newYear
-                            onDateUpdate(year, month)
+                            onDateUpdate(newYear, month)
                         }
                     },
                     textStyle = TextStyle.Default.copy(fontSize = 32.sp),
@@ -81,7 +76,7 @@ fun CreateFilterSettings(
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .clickable { monthExpanded = true }
+                .clickable { monthSelectorToggled(true) }
                 .background(Color.LightGray)
                 .padding(32.dp)
         ) {
@@ -90,16 +85,15 @@ fun CreateFilterSettings(
                 Text(
                     text = month.toString(),
                     fontSize = 32.sp,
-                    modifier = Modifier.clickable { monthExpanded = true })
+                    modifier = Modifier.clickable { monthSelectorToggled(true) })
                 DropdownMenu(
                     expanded = monthExpanded,
-                    onDismissRequest = { monthExpanded = false },
+                    onDismissRequest = { monthSelectorToggled(false) },
                 ) {
                     for (i in 1..12) {
                         DropdownMenuItem(onClick = {
-                            month = i
-                            monthExpanded = false
-                            onDateUpdate(year, month)
+                            onDateUpdate(year, i)
+                            monthSelectorToggled(false)
                         }) {
                             Text(i.toString())
                         }

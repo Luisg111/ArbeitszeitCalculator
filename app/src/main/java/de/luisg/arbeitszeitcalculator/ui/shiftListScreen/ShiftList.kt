@@ -125,9 +125,11 @@ fun ShiftListView(
         ) {
             //Filtereinstellungen
             CreateFilterSettings(
-                startYear = state.year, startMonth = state.month, onDateUpdate = { nYear, nMonth ->
+                year = state.year, month = state.month, onDateUpdate = { nYear, nMonth ->
                     viewModel.addEvent(ShiftListEvent.SelectedYearChanged(nYear))
                     viewModel.addEvent(ShiftListEvent.SelectedMonthChanged(nMonth))
+                }, monthExpanded = state.monthMenuOpen, monthSelectorToggled = {
+                    viewModel.addEvent(ShiftListEvent.MonthMenuToggled())
                 })
 
             Spacer(Modifier.height(16.dp))
@@ -148,7 +150,16 @@ fun ShiftListView(
 
             //Liste mit Schichten und Gesamtdauer am Ende
             MonthTotal(
-                items = listItems
+                itemsVisible = state.monthOverviewExtended,
+                onItemsVisibilityToggled = {
+                    viewModel.addEvent(
+                        ShiftListEvent.MonthOverviewToggled(
+                            it
+                        )
+                    )
+                },
+                shiftDurationString = state.hourSummaryString,
+                salaryString = state.salarySummaryString,
             )
             Spacer(Modifier.height(16.dp))
 

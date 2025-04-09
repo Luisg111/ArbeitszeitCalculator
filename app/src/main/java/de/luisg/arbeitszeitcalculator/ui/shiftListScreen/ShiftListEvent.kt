@@ -11,4 +11,7 @@ sealed interface ShiftListEvent {
     data class SelectedMonthChanged(val month: Int) : ShiftListEvent
     data class SettingsMenuToggled(val isOpen: Boolean? = null) : ShiftListEvent
     data class SalaryChanged(val salary: String) : ShiftListEvent
+    data class MonthMenuToggled(val isOpen: Boolean? = null) : ShiftListEvent
+    data class MonthOverviewToggled(val isOpen: Boolean? = null) : ShiftListEvent
+
 }

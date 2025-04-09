@@ -54,6 +54,8 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
             is ShiftListEvent.SelectedMonthChanged -> selectedMonthChanged(event.month)
             is ShiftListEvent.SettingsMenuToggled -> settingsMenuToggled()
             is ShiftListEvent.SalaryChanged -> salaryChanged(event.salary)
+            is ShiftListEvent.MonthOverviewToggled -> monthOverviewToggled(event.isOpen)
+            is ShiftListEvent.MonthMenuToggled -> monthMenuToggled(event.isOpen)
         }
     }
 
@@ -128,4 +130,15 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
         }
     }
 
+    private fun monthOverviewToggled(isOpen: Boolean?) {
+        _state.update {
+            it.copy(monthOverviewExtended = isOpen ?: !it.monthOverviewExtended)
+        }
+    }
+
+    private fun monthMenuToggled(isOpen: Boolean?) {
+        _state.update {
+            it.copy(monthMenuOpen = isOpen ?: !it.monthMenuOpen)
+        }
+    }
 }

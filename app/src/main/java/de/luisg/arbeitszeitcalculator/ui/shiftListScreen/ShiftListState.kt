@@ -9,4 +9,8 @@ data class ShiftListState(
     val salaryError: Boolean = false,
     val ioMenuExtended: Boolean = false,
     val settingsExtended: Boolean = false,
+    val monthMenuOpen: Boolean = false,
+    val monthOverviewExtended: Boolean = false,
+    val hourSummaryString: String = "",
+    val salarySummaryString: String = "",
 )

@@ -123,7 +123,7 @@ fun CreateShiftView(
             //Zeige Schichtanfang
             Text(
                 text = state.startDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                fontSize = 32.sp,
+                fontSize = 24.sp,
                 modifier = Modifier
                     .clickable { startDialogState.show() }
                     .padding(6.dp))
@@ -138,7 +138,7 @@ fun CreateShiftView(
             //Zeige Schichtende
             Text(
                 text = state.endDate.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
-                fontSize = 32.sp,
+                fontSize = 24.sp,
                 modifier = Modifier
                     .clickable { endDialogState.show() }
                     .padding(6.dp))
