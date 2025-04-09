@@ -48,6 +48,9 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
             is ShiftListEvent.DeleteAllShifts -> deleteAllShifts()
             is ShiftListEvent.SelectedYearChanged -> selectedYearChanged(event.year)
             is ShiftListEvent.SelectedMonthChanged -> selectedMonthChanged(event.month)
+            is ShiftListEvent.SettingsMenuToggled -> settingsMenuToggled()
+            is ShiftListEvent.SallaryChanged -> sallaryChanged(event.sallary)
+            is ShiftListEvent.MaxHoursChanged -> maxHoursChanged(event.maxHours)
         }
     }
 
@@ -101,5 +104,25 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
                     started = SharingStarted.WhileSubscribed(5_000L),
                     initialValue = listOf()
                 )
+    }
+
+    private fun settingsMenuToggled() {
+        _state.update {
+            it.copy(settingsExtended = !it.settingsExtended)
+        }
+    }
+
+    //TODO: add error handling
+    private fun sallaryChanged(sallary: Double) {
+        _state.update {
+            it.copy(sallary = sallary)
+        }
+    }
+
+    //TODO: add error handling
+    private fun maxHoursChanged(maxHours: Int) {
+        _state.update {
+            it.copy(maxHours = maxHours)
+        }
     }
 }

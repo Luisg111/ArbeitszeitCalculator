@@ -5,6 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -25,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.luisg.arbeitszeitcalculator.R
@@ -74,7 +76,7 @@ fun ShiftListView(
 
 
     //Scaffold für Action Button
-    Scaffold(topBar = {
+    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
         TopAppBar(title = {
             Text(stringResource(R.string.ShiftListHeadline))
         }, actions = {
@@ -122,7 +124,26 @@ fun ShiftListView(
                 })
 
             Spacer(Modifier.height(16.dp))
-            //createShiftSettings(loanUseCases)
+            ShiftSettings(
+                maxHoursMonth = TextFieldValue(state.maxHours.toString()),
+                loan = TextFieldValue(state.sallary.toString()),
+                settingsExtended = state.settingsExtended,
+                onSettingsToggled = { viewModel.addEvent(ShiftListEvent.SettingsMenuToggled()) },
+                onSallaryChanged = {
+                    viewModel.addEvent(
+                        ShiftListEvent.SallaryChanged(
+                            it.toString().toDouble()
+                        )
+                    )
+                },
+                onMaxHoursChanged = {
+                    viewModel.addEvent(
+                        ShiftListEvent.MaxHoursChanged(
+                            it.toString().toInt()
+                        )
+                    )
+                },
+            )
             Spacer(Modifier.height(16.dp))
 
             //Liste mit Schichten und Gesamtdauer am Ende
