@@ -5,11 +5,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.FloatingActionButton
@@ -26,10 +28,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.luisg.arbeitszeitcalculator.R
+import de.luisg.arbeitszeitcalculator.ui.shiftListScreen.components.CreateFilterSettings
+import de.luisg.arbeitszeitcalculator.ui.shiftListScreen.components.CreateShiftListItem
+import de.luisg.arbeitszeitcalculator.ui.shiftListScreen.components.MonthTotal
+import de.luisg.arbeitszeitcalculator.ui.shiftListScreen.components.ShiftSettings
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -76,9 +81,11 @@ fun ShiftListView(
 
 
     //Scaffold für Action Button
-    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
-        TopAppBar(title = {
-            Text(stringResource(R.string.ShiftListHeadline))
+    Scaffold(contentWindowInsets = WindowInsets.safeDrawing, topBar = {
+        TopAppBar(windowInsets = AppBarDefaults.topAppBarWindowInsets, title = {
+            Text(
+                stringResource(R.string.ShiftListHeadline),
+            )
         }, actions = {
             IconButton(onClick = { viewModel.addEvent(ShiftListEvent.IoMenuToggled()) }) {
                 Icon(Icons.Filled.MoreVert, "more...")
@@ -125,24 +132,17 @@ fun ShiftListView(
 
             Spacer(Modifier.height(16.dp))
             ShiftSettings(
-                maxHoursMonth = TextFieldValue(state.maxHours.toString()),
-                loan = TextFieldValue(state.sallary.toString()),
+                salary = state.salary,
                 settingsExtended = state.settingsExtended,
                 onSettingsToggled = { viewModel.addEvent(ShiftListEvent.SettingsMenuToggled()) },
-                onSallaryChanged = {
+                onSalaryChanged = {
                     viewModel.addEvent(
-                        ShiftListEvent.SallaryChanged(
-                            it.toString().toDouble()
+                        ShiftListEvent.SalaryChanged(
+                            it
                         )
                     )
                 },
-                onMaxHoursChanged = {
-                    viewModel.addEvent(
-                        ShiftListEvent.MaxHoursChanged(
-                            it.toString().toInt()
-                        )
-                    )
-                },
+                salaryError = state.salaryError
             )
             Spacer(Modifier.height(16.dp))
 

@@ -24,6 +24,10 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
 
     private val _state = MutableStateFlow(ShiftListState())
     val state = _state.onStart {
+        val salary = loanUseCases.getLoan()
+        _state.update {
+            it.copy(salary = salary.toString())
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000L),
@@ -49,8 +53,7 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
             is ShiftListEvent.SelectedYearChanged -> selectedYearChanged(event.year)
             is ShiftListEvent.SelectedMonthChanged -> selectedMonthChanged(event.month)
             is ShiftListEvent.SettingsMenuToggled -> settingsMenuToggled()
-            is ShiftListEvent.SallaryChanged -> sallaryChanged(event.sallary)
-            is ShiftListEvent.MaxHoursChanged -> maxHoursChanged(event.maxHours)
+            is ShiftListEvent.SalaryChanged -> salaryChanged(event.salary)
         }
     }
 
@@ -113,16 +116,16 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
     }
 
     //TODO: add error handling
-    private fun sallaryChanged(sallary: Double) {
+    private fun salaryChanged(salary: String) {
+        val parsedValue = salary.toDoubleOrNull()
+
         _state.update {
-            it.copy(sallary = sallary)
+            it.copy(salary = salary, salaryError = parsedValue == null)
+        }
+
+        if (parsedValue != null) {
+            loanUseCases.setLoan(parsedValue)
         }
     }
 
-    //TODO: add error handling
-    private fun maxHoursChanged(maxHours: Int) {
-        _state.update {
-            it.copy(maxHours = maxHours)
-        }
-    }
 }

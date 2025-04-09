@@ -2,30 +2,22 @@ package de.luisg.arbeitszeitcalculator.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.fasterxml.jackson.annotation.JsonIgnore
+import de.luisg.arbeitszeitcalculator.domain.util.DateSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import java.time.Duration
 import java.time.LocalDateTime
 
 @Entity(tableName = "shift")
+@Serializable
 data class Shift(
-    var startDateTime: LocalDateTime,
-    var endDateTime: LocalDateTime,
-    @PrimaryKey(autoGenerate = true) @JsonIgnore val id: Int? = null
+    @Serializable(with = DateSerializer::class) var startDateTime: LocalDateTime,
+    @Serializable(with = DateSerializer::class) var endDateTime: LocalDateTime,
+    @PrimaryKey(autoGenerate = true) @Transient val id: Int? = null
 ) {
-    @get:JsonIgnore
+
     val duration: Duration
         get() {
             return Duration.between(startDateTime, endDateTime)
         }
-
-    override fun equals(other: Any?): Boolean {
-        if (other == null || other !is Shift) {
-            return false
-        } else {
-            if (other.endDateTime == endDateTime && other.startDateTime == startDateTime) {
-                return true
-            }
-        }
-        return false
-    }
 }

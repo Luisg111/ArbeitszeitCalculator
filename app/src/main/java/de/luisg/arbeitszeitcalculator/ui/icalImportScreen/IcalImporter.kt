@@ -2,8 +2,11 @@ package de.luisg.arbeitszeitcalculator.ui.icalImportScreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeGestures
+import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -20,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.luisg.arbeitszeitcalculator.R
 import org.koin.androidx.compose.koinViewModel
@@ -44,8 +48,9 @@ fun IcalImportView(
     viewModel: IcalImporterViewModel, state: IcalImporterState, onBackButtonPressed: () -> Unit
 ) {
     Scaffold(
+        contentWindowInsets = WindowInsets.safeGestures,
         topBar = {
-            TopAppBar(title = {
+            TopAppBar(windowInsets = AppBarDefaults.topAppBarWindowInsets, title = {
                 Text(stringResource(R.string.IcalImporterHeadline))
             }, actions = {
                 //Gehe Zurück zur Listenansicht, wenn zurückbutton geklickt
@@ -61,8 +66,9 @@ fun IcalImportView(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(padding)
-
+            modifier = Modifier
+                .padding(padding)
+                .padding(top = 16.dp)
         ) {
             LocalContext.current
 

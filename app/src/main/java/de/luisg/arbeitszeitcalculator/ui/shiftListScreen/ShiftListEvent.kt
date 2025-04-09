@@ -10,6 +10,5 @@ sealed interface ShiftListEvent {
     data class SelectedYearChanged(val year: Int) : ShiftListEvent
     data class SelectedMonthChanged(val month: Int) : ShiftListEvent
     data class SettingsMenuToggled(val isOpen: Boolean? = null) : ShiftListEvent
-    data class SallaryChanged(val sallary: Double) : ShiftListEvent
-    data class MaxHoursChanged(val maxHours: Int) : ShiftListEvent
+    data class SalaryChanged(val salary: String) : ShiftListEvent
 }

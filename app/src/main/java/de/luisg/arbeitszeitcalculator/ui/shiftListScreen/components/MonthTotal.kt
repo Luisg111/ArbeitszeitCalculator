@@ -1,4 +1,4 @@
-package de.luisg.arbeitszeitcalculator.ui.shiftListScreen
+package de.luisg.arbeitszeitcalculator.ui.shiftListScreen.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

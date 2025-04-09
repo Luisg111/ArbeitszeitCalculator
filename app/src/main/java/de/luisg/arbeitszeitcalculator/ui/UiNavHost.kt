@@ -1,18 +1,15 @@
 package de.luisg.arbeitszeitcalculator.ui
 
-import android.widget.Toast
-
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import de.luisg.arbeitszeitcalculator.ui.createShiftScreen.CreateShiftRoot
 import de.luisg.arbeitszeitcalculator.ui.icalImportScreen.IcalImportRoot
 import de.luisg.arbeitszeitcalculator.ui.shiftListScreen.ShiftListRoot
+import kotlinx.serialization.Serializable
 
 @Composable
 fun UiNavHost(
@@ -22,51 +19,44 @@ fun UiNavHost(
     //NavHost für die Navigation
     NavHost(
         navController = navController,
-        startDestination = "list",
         modifier = modifier,
+        startDestination = ShiftListScreen,
     ) {
-        composable("list") {
+        composable<ShiftListScreen> {
             //Listenansicht bestehender Schichten
             ShiftListRoot(
-                onNavigateToNewShift = { navController.navigate("create") },
+                onNavigateToNewShift = { navController.navigate(ShiftDetailsScreen()) },
                 onNavigateToIcalImport = {
-                    navController.navigate("import_ical")
+                    navController.navigate(IcalImportScreen)
                 },
                 onNavigateToShift = {
-                    navController.navigate("update/${it}")
+                    navController.navigate(ShiftDetailsScreen(shiftId = it))
                 })
         }
-        composable("create") {
-            //Neue Schicht eintragen
+        composable<ShiftDetailsScreen> {
+            val args = it.toRoute<ShiftDetailsScreen>()
+            //Schicht erstellen oder aktualisieren
             CreateShiftRoot(
-                onNavigateToList = { navController.navigate("list") },
-                shiftId = null,
+                onNavigateToList = { navController.navigate(ShiftListScreen) },
+                shiftId = args.shiftId,
             )
+
         }
-        composable(
-            "update/{shiftId}",
-            arguments = listOf(navArgument("shiftId") { type = NavType.IntType })
-        ) {
-            //Schicht aktualisieren
-            if (it.arguments != null) {
-                CreateShiftRoot(
-                    onNavigateToList = { navController.navigate("list") },
-                    shiftId = it.arguments!!.getInt("shiftId"),
-                )
-            } else {
-                Toast.makeText(
-                    LocalContext.current,
-                    "Schicht konnte nicht geladen werden!",
-                    Toast.LENGTH_SHORT
-                ).show()
-                navController.navigate("list")
-            }
-        }
-        composable("import_ical") {
+        composable<IcalImportScreen> {
             //Schichten Importieren
             IcalImportRoot(
-                onNavigateToList = { navController.navigate("list") })
+                onNavigateToList = { navController.navigate(ShiftListScreen) })
         }
     }
-
 }
+
+@Serializable
+object ShiftListScreen
+
+@Serializable
+data class ShiftDetailsScreen(
+    val shiftId: Int? = null
+)
+
+@Serializable
+object IcalImportScreen
