@@ -44,14 +44,12 @@ fun ShiftListRoot(
     onNavigateToShift: (Int) -> Unit,
 ) {
     val viewModel: ShiftListViewModel = koinViewModel()
-    val state by viewModel.state.collectAsStateWithLifecycle()
 
     ShiftListView(
         onNavigateToShift = { onNavigateToShift(it) },
         onNavigateToNewShift = { onNavigateToNewShift() },
         onNavigateToIcalImport = { onNavigateToIcalImport() },
         viewModel = viewModel,
-        state = state,
     )
 }
 
@@ -61,9 +59,8 @@ fun ShiftListView(
     onNavigateToNewShift: () -> Unit,
     onNavigateToShift: (id: Int) -> Unit,
     viewModel: ShiftListViewModel,
-    state: ShiftListState,
 ) {
-    val listItems by viewModel.listItems.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val exportJsonLauncher = rememberLauncherForActivityResult(
         contract = CreateDocument("application/json"), onResult = { uri ->
@@ -165,7 +162,7 @@ fun ShiftListView(
 
             //Alle Schichten anzeigen
             LazyColumn(Modifier.padding(horizontal = 16.dp, vertical = 0.dp)) {
-                items(listItems, { shift -> shift.id!! }) { item ->
+                items(state.listItems, { shift -> shift.id!! }) { item ->
                     CreateShiftListItem(
                         item = item,
                         backgroundColor = MaterialTheme.colors.primary,

@@ -1,5 +1,6 @@
 package de.luisg.arbeitszeitcalculator.ui.shiftListScreen
 
+import de.luisg.arbeitszeitcalculator.data.model.Shift
 import java.time.LocalDateTime
 
 data class ShiftListState(
@@ -13,4 +14,5 @@ data class ShiftListState(
     val monthOverviewExtended: Boolean = false,
     val hourSummaryString: String = "",
     val salarySummaryString: String = "",
+    val listItems: List<Shift> = listOf(),
 )
