@@ -53,16 +53,7 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
         state.copy(month = month)
     }.onStart {
         if (!hasLoadedData) {
-            val salary = loanUseCases.getLoan()
-            _state.update {
-                it.copy(salary = salary.toString())
-            }
-            _monthFlow.update {
-                _state.value.month
-            }
-            _yearFlow.update {
-                _state.value.year
-            }
+            loadData()
             hasLoadedData = true
         }
     }.stateIn(
@@ -71,7 +62,7 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
         initialValue = ShiftListState()
     )
 
-    fun onEvent(event: ShiftListEvent) {
+    fun addEvent(event: ShiftListEvent) {
         when (event) {
             is ShiftListEvent.ExportToJson -> exportToJson(event.uri)
             is ShiftListEvent.ImportFromJson -> importFromJson(event.uri)
@@ -83,6 +74,19 @@ class ShiftListViewModel : ViewModel(), KoinComponent {
             is ShiftListEvent.SalaryChanged -> salaryChanged(event.salary)
             is ShiftListEvent.MonthOverviewToggled -> monthOverviewToggled(event.isOpen)
             is ShiftListEvent.MonthMenuToggled -> monthMenuToggled(event.isOpen)
+        }
+    }
+
+    private fun loadData() {
+        val salary = loanUseCases.getLoan()
+        _state.update {
+            it.copy(salary = salary.toString())
+        }
+        _monthFlow.update {
+            _state.value.month
+        }
+        _yearFlow.update {
+            _state.value.year
         }
     }
 

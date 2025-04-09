@@ -51,7 +51,7 @@ fun ShiftListRoot(
         onNavigateToNewShift = { onNavigateToNewShift() },
         onNavigateToIcalImport = { onNavigateToIcalImport() },
         state = state,
-        onEvent = viewModel::onEvent,
+        onEvent = viewModel::addEvent,
     )
 }
 

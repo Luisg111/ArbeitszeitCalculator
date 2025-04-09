@@ -62,7 +62,8 @@ class CreateShiftViewModel(id: Int?) : ViewModel(), KoinComponent {
         _state.update {
             it.copy(
                 startDate = date.truncatedTo(ChronoUnit.MINUTES),
-                endDate = if (it.endDateModified) it.endDate else it.endDate.plusHours(4)
+                endDate = if (it.endDateModified) it.endDate else date.truncatedTo(ChronoUnit.MINUTES)
+                    .plusHours(4)
             )
         }
     }
