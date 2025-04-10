@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.ui.Modifier
-import de.luisg.arbeitszeitcalculator.ui.UiNavHost
 import de.luisg.myapplication.ui.theme.ArbeitszeitCalculatorTheme
 
 class MainComponentActivity : ComponentActivity() {
