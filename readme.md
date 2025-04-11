@@ -1,5 +1,7 @@
 # Arbeitszeit Calculator
 
+<img src="docu/assets/list_view.png" alt="Listenansicht aller Schichten" width="300"/>
+
 App zur Arbeitszeiterfassung
 
 ## Funktionen
